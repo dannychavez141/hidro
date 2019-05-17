@@ -49,12 +49,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="row">
                             <div class="col-xl-4 col-6 header-top_w3layouts border-right">
                                 <p>
-                                    <span class="fa fa-map-marker mr-2"></span>Parma Via, Italy
+                                    <span class="fa fa-map-marker mr-2"></span>UNU, PUCALLPA
                                 </p>
                             </div>
                             <div class="col-xl-4 col-6 header-top_w3layouts text-md-right">
                                 <p class="text-bl">
-                                    <span class="fa fa-phone mr-2"></span>+1 000263676
+                                    <span class="fa fa-phone mr-2"></span>+51 976 060 3920
                                 </p>
                             </div>
                             <div class="col-xl-4"></div>
@@ -87,7 +87,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <!-- logo -->
             <h1 class="logo-w3pvt float-left">
                 <a class="navbar-brand" href="index.html">
-                    <img src="images/logo.png" alt="" class="img-fluid logo-img">Florae
+                    <img src="images/logo.png" alt="" class="img-fluid logo-img">HIDROPONIA UNU
                 </a>
             </h1>
             <!-- //logo -->
@@ -97,23 +97,23 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <label for="drop" class="toggle">Menu</label>
                     <input type="checkbox" id="drop" />
                     <ul class="menu mx-lg-auto">
-                        <li><a href="index.html" class="active">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
+                        <li><a href="index.html" class="active">INICIO</a></li>
+                        <li><a href="#about">PLANTAS</a></li>
                         <li>
                             <!-- First Tier Drop Down -->
-                            <label for="drop-2" class="toggle toogle-2">Pages <span class="fa fa-angle-down" aria-hidden="true"></span>
+                            <label for="drop-2" class="toggle toogle-2">SISTEMA<span class="fa fa-angle-down" aria-hidden="true"></span>
                             </label>
-                            <a href="#">Pages <span class="fa fa-angle-down" aria-hidden="true"></span></a>
+                            <a href="#">SISTEMA<span class="fa fa-angle-down" aria-hidden="true"></span></a>
                             <input type="checkbox" id="drop-2" />
                             <ul>
-                                <li><a href="#services" class="drop-text">Services</a></li>
-                                <li><a href="#stats" class="drop-text">Stats</a></li>
-                                <li><a href="#blog" class="drop-text">Blog</a></li>
-                                <li><a href="#test" class="drop-text">Testimonials</a></li>
+                                <li><a href="#services" class="drop-text">RIEGO</a></li>
+                                <li><a href="#stats" class="drop-text">TEMPERATURAS</a></li>
+                                <li><a href="#blog" class="drop-text">HUMEDAD</a></li>
+                                <li><a href="#test" class="drop-text">ESTADISTICAS</a></li>
                             </ul>
                         </li>
-                        <li><a href="#gallery">Gallery</a></li>
-                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#gallery">REPORTES</a></li>
+                        <li><a href="#contact">USUARIOS</a></li>
                     </ul>
                 </nav>
             </div>
@@ -121,7 +121,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <!-- dwn -->
             <div class="free-w3pvt text-center">
                 <a href="#contact" class="login-button-2 text-uppercase scroll mt-lg-0 mt-2">
-                    ACCEDER AL SISTEMA
+                    ACCEDER AL SISTEMA 
                 </a>
             </div>
             <!-- //dwn -->
