@@ -49,7 +49,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="row">
                             <div class="col-xl-4 col-6 header-top_w3layouts border-right">
                                 <p>
-                                    <span class="fa fa-map-marker mr-2"></span>UNU, PUCALLPA
+                                    <span class="fa fa-map-marker mr-2"></span>UNU, YARINA
                                 </p>
                             </div>
                             <div class="col-xl-4 col-6 header-top_w3layouts text-md-right">
