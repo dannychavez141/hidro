@@ -99,6 +99,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <ul class="menu mx-lg-auto">
                         <li><a href="index.html" class="active">INICIO</a></li>
                         <li><a href="#about">PLANTAS</a></li>
+                        <li><a href="#about">INSUMOS</a></li>
+                     
                         <li>
                             <!-- First Tier Drop Down -->
                             <label for="drop-2" class="toggle toogle-2">SISTEMA<span class="fa fa-angle-down" aria-hidden="true"></span>
@@ -110,10 +112,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 <li><a href="#stats" class="drop-text">TEMPERATURAS</a></li>
                                 <li><a href="#blog" class="drop-text">HUMEDAD</a></li>
                                 <li><a href="#test" class="drop-text">ESTADISTICAS</a></li>
+                                     <li><a href="#gallery">REPORTES</a></li>
+                                <li><a href="#test" class="drop-text">USUARIOS</a></li>
                             </ul>
                         </li>
-                        <li><a href="#gallery">REPORTES</a></li>
-                        <li><a href="#contact">USUARIOS</a></li>
+                   
+                           <li><a href="#about">TIPO DE PLANTAS</a></li>
                     </ul>
                 </nav>
             </div>
