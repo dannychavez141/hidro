@@ -18,11 +18,10 @@
                             <h5>NOMBRE DE PLANTA<font color="red">*</font>:</h5>
                             <div class="input-group mt-3">
                                 <input type="text" name="name" class="form-control" placeholder="Ingrese Nombre de la Planta" required="">
-                            </div>
+                            </div><h5>SELECCIONE EL TIPO DE PLANTA<font color="red">*</font>:</h5>
                             <div class="input-group mt-3">
                                <select class="form-control" ><option>
-                                   
-                               </option>ORTALIZA</select>
+                               </option></select>
                                </option></select>
                             </div>
                            

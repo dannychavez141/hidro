@@ -49,12 +49,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="row">
                             <div class="col-xl-4 col-6 header-top_w3layouts border-right">
                                 <p>
-                                    <span class="fa fa-map-marker mr-2"></span>UNU, PUCALLPA-YARINA
+                                    <span class="fa fa-map-marker mr-2"></span>UNU, PUCALLPA
                                 </p>
                             </div>
                             <div class="col-xl-4 col-6 header-top_w3layouts text-md-right">
                                 <p class="text-bl">
-                                    <span class="fa fa-phone mr-2"></span>+51 976 060 3920
+                                    <span class="fa fa-phone mr-2"></span>+51 976 603 920
                                 </p>
                             </div>
                             <div class="col-xl-4"></div>
