@@ -86,8 +86,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <div class="container d-lg-flex">
             <!-- logo -->
             <h1 class="logo-w3pvt float-left">
-                <a class="navbar-brand" href="index.html">
-                    <img src="images/logo.png" alt="" class="img-fluid logo-img">HIDROPONIA UNU
+                <a class="navbar-brand" href="index.php">
+                    <img src="images/logounu.jpg" class="img-fluid logo-img" width="50" >HIDROPONIA UNU
                 </a>
             </h1>
             <!-- //logo -->
@@ -97,9 +97,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <label for="drop" class="toggle">Menu</label>
                     <input type="checkbox" id="drop" />
                     <ul class="menu mx-lg-auto">
-                        <li><a href="index.html" class="active">INICIO</a></li>
-                        <li><a href="#about">PLANTAS</a></li>
-                        <li><a href="#about">INSUMOS</a></li>
+                        <li><a href="index.php" class="active">INICIO</a></li>
+                        <li><a href="plantas.php">PLANTAS</a></li>
+                        <li><a href="insumos.php">INSUMOS</a></li>
                      
                         <li>
                             <!-- First Tier Drop Down -->
@@ -108,16 +108,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                             <a href="#">SISTEMA<span class="fa fa-angle-down" aria-hidden="true"></span></a>
                             <input type="checkbox" id="drop-2" />
                             <ul>
-                                <li><a href="#services" class="drop-text">RIEGO</a></li>
-                                <li><a href="#stats" class="drop-text">TEMPERATURAS</a></li>
-                                <li><a href="#blog" class="drop-text">HUMEDAD</a></li>
-                                <li><a href="#test" class="drop-text">ESTADISTICAS</a></li>
-                                     <li><a href="#gallery">REPORTES</a></li>
-                                <li><a href="#test" class="drop-text">USUARIOS</a></li>
+                                <li><a href="http://192.168.1.25" class="drop-text"  target="_blank">RIEGO</a></li>
+                                <li><a href="rvirtual.php" class="drop-text">ESTADISTICAS</a></li>
+                                <li><a href="tplanta.php" class="drop-text">TIPO DE PLANTAS</a></li>
+                                <li><a href="reportes.php" class="drop-text">REPORTES</a></li>
+                                <li><a href="usuarios.php" class="drop-text">USUARIOS</a></li>
                             </ul>
                         </li>
                    
-                           <li><a href="#about">TIPO DE PLANTAS</a></li>
+                           
                     </ul>
                 </nav>
             </div>

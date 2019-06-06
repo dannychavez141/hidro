@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-05-2019 a las 18:42:12
+-- Tiempo de generación: 06-06-2019 a las 18:36:47
 -- Versión del servidor: 5.5.40
 -- Versión de PHP: 5.5.19
 
@@ -120,11 +120,26 @@ CREATE TABLE IF NOT EXISTS `plantas_insumos` (
 DROP TABLE IF EXISTS `reporte`;
 CREATE TABLE IF NOT EXISTS `reporte` (
 `idreporte` int(11) NOT NULL,
-  `hum` double DEFAULT NULL,
-  `temp` double DEFAULT NULL,
-  `fecha` datetime DEFAULT NULL,
-  `idplantas` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `hum` double DEFAULT '0',
+  `temp` double DEFAULT '0',
+  `hsuelo1` double DEFAULT '0',
+  `hsuelo2` double DEFAULT '0',
+  `hsuelo3` double DEFAULT '0',
+  `fecha` datetime DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `reporte`
+--
+
+INSERT INTO `reporte` (`idreporte`, `hum`, `temp`, `hsuelo1`, `hsuelo2`, `hsuelo3`, `fecha`) VALUES
+(1, 86, 23, 11, 0, 0, '2019-05-26 02:32:45'),
+(2, 87, 24, 11, 0, 0, '2019-05-26 02:32:50'),
+(3, 86, 24, 11, 0, 0, '2019-05-26 02:32:56'),
+(4, 87, 24, 12, 0, 0, '2019-05-26 02:33:01'),
+(5, 87, 24, 14, 0, 0, '2019-05-26 02:33:06'),
+(6, 87, 24, 12, 0, 0, '2019-05-26 02:33:12'),
+(7, 86, 24, 14, 0, 0, '2019-05-26 02:33:17');
 
 -- --------------------------------------------------------
 
@@ -208,7 +223,7 @@ ALTER TABLE `plantas_insumos`
 -- Indices de la tabla `reporte`
 --
 ALTER TABLE `reporte`
- ADD PRIMARY KEY (`idreporte`), ADD KEY `fk_reporte_plantas1_idx` (`idplantas`);
+ ADD PRIMARY KEY (`idreporte`);
 
 --
 -- Indices de la tabla `riego`
@@ -256,7 +271,7 @@ MODIFY `idplantainsumo` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-MODIFY `idreporte` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `idreporte` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `riego`
 --
