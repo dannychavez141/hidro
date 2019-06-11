@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zxx">
+<meta http-equiv='refresh' target='_blank' content='3;url=http://192.168.1.38:81/hidroponiamovil/rvirtual.php'>
 <?php error_reporting(0);
  include_once'./cabezera.php'; 
 require 'conexion.php';
