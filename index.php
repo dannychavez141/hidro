@@ -39,7 +39,7 @@
                     <div class="bottom-gd p-lg-5 p-4">
                         <span class="fa fa-american-sign-language-interpreting"></span>
                         <h3 class="my-3">Riego Remoto</h3>
-                        <p>Podemos activar las llaves de una de los jardines de manera remota al mismo tiempo actibar la bomba de agua</p>
+                        <p>Podemos activar las llaves de una de los jardines de manera remota al mismo tiempo activar la bomba de agua</p>
                     </div>
                 </div>
 

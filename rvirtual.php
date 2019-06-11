@@ -22,7 +22,7 @@ $query = "SELECT * FROM hidroponia.reporte order by idreporte desc limit 1;";
     $resultado = $mysqli->query($query);
 while($row = $resultado->fetch_array())
     {
-?>
+?><h1 class="progress-w3" align="center">VALORES REGISTRADOS POR SENSORES</h1>
                     <div class="progress-one">
                         <h4 class="progress-w3">HUMEDAD DEL AMBIENTE: <?php echo $row[1]."%"; ?> </h4>
                         <div class="progress">
