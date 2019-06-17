@@ -1,42 +1,38 @@
 
 <!DOCTYPE html>
 <html lang="zxx">
-<?php error_reporting(0);
- include_once'./cabezera.php';  ?>
 
+<?php error_reporting(0);
+ 
+ include_once'./cabezera.php'; 
+
+$conf=$_GET['tconf'];
+if ($conf) {
+ echo "<script>alert('Operacion Realizada exitosamente');</script>";
+
+} ?>
 
 <body>
-   
-    <!--/banner-bottom -->
-    <section class="banner-bottom py-5" id="contact">
-        
-        <div class="container-fluid py-md-5 inner-sec-w3ls">
-          
-             
-                   
-                        <h3 class="text-capitalize mb-4 text-center">TIPO DE PLANTAS REGISTRADAS</h3>
-                        <form action="#" method="post">
-                                 <h5>BUSCAR TIPO DE PLANTA <font color="red"></font>:</h5>           
-                               <div class="input-group mt-3">
-                                
-                                <input type="text" class="margin2 form-control" name="name" placeholder="Ingrese Planta a Buscar" >
-                                 <button class="submit btn">BUSCAR</button> 
-                            </div>
-                            <br>
-                             <center>      <table border="1"><tr bgcolor="#FF0000"><td>CODIGO</td><td>TIPO DE PLANTA</td><td>TEMPERATURA ADECUADA</td><td>HUMEDAD ADECUADA</td><td>EDITAR</td><td>VER DETALLES</td></tr>
-                                <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                              </table></center>
-                            </div>
-                        
+   <center>
+        <section class="principal">
 
-                       
-                          
-               
+  <h1>Tipo de Plantas Registrados</h1>
 
-           
- </form>
-    </section>
- 
+  <div class="formulario">
+    <label for="caja_busqueda">Buscar</label>
+    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="regdocente.php"><button class="btn btn-success">Agregar Tipo</button></a>
+
+    <br><br>
+    
+  </div>
+
+  <div id="datos"></div>
+
+</section>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/btplanta.js"></script>
+</center>
 </body>
 
 </html>
