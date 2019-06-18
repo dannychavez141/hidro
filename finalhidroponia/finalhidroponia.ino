@@ -2,7 +2,7 @@
 #include "RTClib.h"
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
-static byte mymac[] = {0xDD,0xDD,0xDD,0x00,0x01,0x05};
+static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 static byte myip[] = {192,168,1,25};
 byte Ethernet::buffer[1000];
 const int llave1 = 4;
@@ -98,7 +98,12 @@ void ambiente() {
   h3hum = map(analogRead(hidro3), 0, 1023, 100, 0);
    hu=(h1hum+h2hum+h3hum)/3;
 
-
+ Serial.print("Humidity: "); 
+  Serial.print(hum1);
+  Serial.print(" %\t");
+  Serial.print("Temperature: "); 
+  Serial.print(tem1);
+  Serial.print(" *C ");
 }
 
 static word homePage() {
