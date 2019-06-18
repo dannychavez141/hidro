@@ -65,6 +65,12 @@ void loop() {
    delay(100); 
 }
 void mostrarhumedad() {
+  
+ hum1 = dht1.readHumidity();
+ tem1 = dht1.readTemperature();
+  h1hum = map(analogRead(hidro1), 0, 1023, 100, 0);
+  h2hum = map(analogRead(hidro2), 0, 1023, 100, 0);
+  h3hum = map(analogRead(hidro3), 0, 1023, 100, 0);
   DateTime now = RTC.now(); 
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -86,24 +92,7 @@ void mostrarhumedad() {
     lcd.print(":");
     lcd.print(now.minute(), DEC);
     lcd.print(":");
-    lcd.print(now.second(), DEC);
-   
-   
-}
-void ambiente() {
- hum1 = dht1.readHumidity();
- tem1 = dht1.readTemperature();
-  h1hum = map(analogRead(hidro1), 0, 1023, 100, 0);
-  h2hum = map(analogRead(hidro2), 0, 1023, 100, 0);
-  h3hum = map(analogRead(hidro3), 0, 1023, 100, 0);
-   hu=(h1hum+h2hum+h3hum)/3;
-
- Serial.print("Humidity: "); 
-  Serial.print(hum1);
-  Serial.print(" %\t");
-  Serial.print("Temperature: "); 
-  Serial.print(tem1);
-  Serial.print(" *C ");
+    lcd.print(now.second(), DEC);  
 }
 
 static word homePage() {
@@ -163,6 +152,6 @@ void pagina(){word len = ether.packetReceive();
    
       digitalWrite(llave3, LOW);
        Estadollave3= "OFF";
-    }  ambiente();      
+    }      
     ether.httpServerReply(homePage()); // se envia página Web
   }}
