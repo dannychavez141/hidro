@@ -7,11 +7,11 @@
 
     $salida = "";
 
-    $query = "SELECT * FROM asistencia.docente where concat(idDocente,nomDoc,apepaDoc,apemaDoc,dni) like '%%';";
+    $query = "SELECT * FROM hidroponia.tplanta where concat(idtplanta,descr) like '%%';";
 
     if (isset($_POST['consulta'])) {
         $q = $conn->real_escape_string($_POST['consulta']);
-        $query = "SELECT * FROM asistencia.docente where concat(idDocente,nomDoc,apepaDoc,apemaDoc,dni) like '%$q%';";
+        $query = "SELECT * FROM hidroponia.tplanta where concat(idtplanta,descr) like '%$q%';";
     }
 
     $resultado = $conn->query($query);
@@ -24,10 +24,10 @@
                 <thead>
                     <tr id='titulo'bgcolor='#FF0000'>
                         <td>Codigo</td>
-                        <td>Apellidos y Nombres</td>
-                        <td>DNI</td>
-                        <td>Estado</td>
-                        <td>Detalles</td>
+                        <td>Descripcion</td>
+                        <td>Temperatura Adecuada</td>
+                        <td>Humedad Adecuada</td>
+                        
                         <td>Editar</td>
                     </tr>
 
@@ -37,17 +37,14 @@
         <tbody>";
 
         while ($fila = $resultado->fetch_array()) {
-              if($fila[6]==1){
-    $estado="Activo";
- }else {$estado="Inactivo";}
+              
 
             $salida.="<tr>
-                        <td>".$fila[0]."</td>
-                        <td>".$fila[2]." ".$fila[3]." ".$fila[1]."</td>
-                        <td>".$fila[4]."</td>
-                        <td>".$estado."</td>
-                        <td><a href='dtplanta.php?cod=".$fila[0]."' ><img src='images/deta.png' width='30' height='30'></a></td>
-                        <td><a href='mtplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
+                        <td align='center'>".$fila[0]."</td>
+                        <td align='center'>".$fila[1]."</td>
+                        <td align='center'>".$fila[2]."</td>
+                        <td align='center'>".$fila[3]."</td>
+                        <td align='center'><a href='mtplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
 
         }
         $salida.="</tbody></table>";
