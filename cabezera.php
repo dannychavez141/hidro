@@ -98,8 +98,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <input type="checkbox" id="drop" />
                     <ul class="menu mx-lg-auto">
                         <li><a href="index.php" class="active">INICIO</a></li>
-                        <li><a href="plantas.php">PLANTAS</a></li>
-                        <li><a href="insumos.php">INSUMOS</a></li>
+                        <li><a href="planta.php">PLANTAS</a></li>
+                        <li><a href="insumo.php">INSUMOS</a></li>
                      
                         <li>
                             <!-- First Tier Drop Down -->
@@ -111,8 +111,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 <li><a href="http://192.168.1.25" class="drop-text"  target="_blank">RIEGO</a></li>
                                 <li><a href="rvirtual.php" class="drop-text">ESTADISTICAS</a></li>
                                 <li><a href="tplanta.php" class="drop-text">TIPO DE PLANTAS</a></li>
-                                <li><a href="reportes.php" class="drop-text">REPORTES</a></li>
-                                <li><a href="usuarios.php" class="drop-text">USUARIOS</a></li>
+                                <li><a href="reporte.php" class="drop-text">REPORTES</a></li>
+                                <li><a href="usuario.php" class="drop-text">USUARIOS</a></li>
                             </ul>
                         </li>
                    
