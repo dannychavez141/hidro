@@ -20,7 +20,7 @@ if ($conf) {
 
   <div class="formulario">
     <label for="caja_busqueda">Buscar</label>
-    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="rplanta.php"><button class="btn btn-success">Agregar Planta</button></a>
+    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="rplanta.php"><button class="btn btn-danger">Agregar Planta</button></a>
 
     <br><br>
     

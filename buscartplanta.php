@@ -25,8 +25,8 @@
                     <tr id='titulo'bgcolor='#FF0000'>
                         <td>Codigo</td>
                         <td>Descripcion</td>
-                        <td>Temperatura Adecuada</td>
-                        <td>Humedad Adecuada</td>
+                        <td>Temperatura Adecuada °C</td>
+                        <td>Humedad Adecuada %</td>
                         
                         <td>Editar</td>
                     </tr>
@@ -42,8 +42,8 @@
             $salida.="<tr>
                         <td align='center'>".$fila[0]."</td>
                         <td align='center'>".$fila[1]."</td>
-                        <td align='center'>".$fila[2]."</td>
-                        <td align='center'>".$fila[3]."</td>
+                        <td align='center'>".$fila[2]."°C</td>
+                        <td align='center'>".$fila[3]."%</td>
                         <td align='center'><a href='mtplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
 
         }

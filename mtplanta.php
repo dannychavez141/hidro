@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zxx">
 <?php error_reporting(0);
@@ -11,16 +12,16 @@
           
                     <div class="form">
                         <h3 class="text-capitalize mb-4 text-center">MODIFICANDO TIPO DE PLANTA</h3>
-                        <form action="#" method="post">
-                             <h5>CODIGO DE TIPO PLANTA<font color="red">*</font>:</h5>
+                        <form action="ctplanta.php" method="post">
+                             <h5>CODIGO DE TIPO PLANTA<font color="red"></font>:</h5>
                              <div class="input-group mt-3">
-                                <input type="text" name=" tplant" class="form-control" placeholder="Ingrese Nombre de la Planta" required="">
+                                <input type="text" name="tcod" class="form-control" placeholder="Ingrese Codigo" required="" readonly="">
                                 
                             </div>
-
+<br>
                             <h5>NOMBRE DE TIPO PLANTA<font color="red">*</font>:</h5>
                             <div class="input-group mt-3">
-                                <input type="text" name=" tplant" class="form-control" placeholder="Ingrese Nombre de la Planta" required="">
+                                <input type="text" name="tnom" class="form-control" placeholder="Ingrese Nombre de la Planta" required="">
                                 
                             </div>
 <h5>TEMPERATURA ADECIADA C°<font color="red">*</font>:</h5>
@@ -29,17 +30,13 @@
                                 <h5>HUMEDAD ADECUADA %<font color="red">*</font>:</h5>
                             <div class="input-group mt-3">
                                 <input type="text" name="thum" class="form-control" placeholder="Ingrese Humedad" required=""></div>
+                                <h5>TIEMPO DE RIEGO Seg<font color="red">*</font>:</h5>
+                            <div class="input-group mt-3">
+                                <input type="text" name="ttiem" class="form-control" placeholder="Ingrese Tiempo" required=""></div>
 
-
-                            <h5>SELECCIONE HORAS DE RIEGO<font color="red">*</font>:</h5>
-                           
-                            <h5>8am<input type="checkbox" name="chor" value="1" checked="checked"></input ></h5> 
-                            <h5>8am<input type="checkbox" name="chor" value="1" ></input ></h5>  
-                         
-                         
- 
                             <div class="input-group1 mt-3">
-                                <button class="submit btn form-control">MODIFICAR</button>
+                                <button class="submit btn form-control" value="M" name="baccion">MODIFICAR</button>
+                            <a href="tplanta.php"><button type="button" class="btn btn form-control">ATRAS</button></a> 
                             </div>
                         </form>
                     </div>

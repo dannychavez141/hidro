@@ -45,7 +45,7 @@ where concat(p.idplantas,p.descr,tp.descr) like '%$q%';";
                         <td align='center'>".$fila[5]."°C</td>
                         <td align='center'>".$fila[4]."%</td>
                         <td align='center'>".$fila[6]."seg</td>
-                        <td align='center'><a href='mtplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
+                        <td align='center'><a href='mplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
 
         }
         $salida.="</tbody></table>";

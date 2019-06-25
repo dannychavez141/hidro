@@ -38,6 +38,7 @@
                            
                             <div class="input-group1 mt-3">
                                 <button class="submit btn form-control" value="R" name="baccion">REGISTRAR</button>
+                                <a href="planta.php"><button type="button" class="btn btn form-control">ATRAS</button></a> 
                             </div>
                         </form>
                     </div>

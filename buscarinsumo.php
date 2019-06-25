@@ -35,7 +35,7 @@
             $salida.="<tr>
                         <td align='center'>".$fila[0]."</td>
                         <td align='center'>".$fila[1]."</td>
-                        <td align='center'><a href='mtplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
+                        <td align='center'><a href='minsumo.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
 
         }
         $salida.="</tbody></table>";
