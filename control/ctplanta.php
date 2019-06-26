@@ -16,7 +16,7 @@ $accion = $_POST['baccion'];
         echo $sql;
     $rs=$mysqli->query($sql);
       
-      header("Location: ../planta.php?tconf=true");
+      header("Location: ../tplanta.php?tconf=true");
         exit;
             break;
 
@@ -24,10 +24,10 @@ $accion = $_POST['baccion'];
         $tcod = $_POST['tcod'];
       $tnom = $_POST['tnom'];
           $tplan = $_POST['tplan'];
-     $sql="UPDATE `hidroponia`.`plantas` SET `descr`='$tnom', `idtplanta`='$tplan' WHERE `idplantas`='$tcod';";
+     $sql="UPDATE `UPDATE `hidroponia`.`tplanta` SET `descr`='citric', `temp`='3', `hum`='6', `triego`='4' WHERE `idtplanta`='1';a";
         echo $sql;
       $rs=$mysqli->query($sql);
-       header("Location: ../planta.php?tconf=true");
+       header("Location: ../tplanta.php?tconf=true");
        exit;
             break;
     	default:
