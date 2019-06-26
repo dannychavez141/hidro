@@ -6,10 +6,13 @@ $accion = $_POST['baccion'];
     switch ($accion) {
      case 'R':
          $tnom = $_POST['tnom'];
-          $tplan = $_POST['tplan'];
+         $ttem = $_POST['ttemp'];
+         $thum = $_POST['thum'];
+         $ttiem = $_POST['ttiem'];
+          
         
           
-        $sql="INSERT INTO `hidroponia`.`plantas` (`descr`, `idtplanta`) VALUES ('$tnom ', '$tplan');";
+        $sql="INSERT INTO `hidroponia`.`tplanta` (`descr`, `temp`, `hum`, `triego`) VALUES ('$tnom', '$ttem', '$thum', '$ttiem');";
         echo $sql;
     $rs=$mysqli->query($sql);
       
