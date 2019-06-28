@@ -3,8 +3,8 @@
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
-static byte myip[] = {192,168,1,25};
 byte Ethernet::buffer[1000];
+static byte myip[] = {192,168,1,25};
 const int llave1 = 4;
 const int llave2 = 5;
 const int llave3 = 6;
@@ -19,7 +19,7 @@ char modo='0';
 #define hidro2 A1
 #define hidro3 A2
 #define DHTTYPE DHT11
-DHT dht1(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE);
 RTC_DS1307 RTC;
 int t;
 long hum1=0;
@@ -33,9 +33,9 @@ void setup() {
   Serial.begin(9600);
   lcd.init();                      // initialize the lcd
   lcd.backlight();
-  dht1.begin();
+  dht.begin();
   RTC.begin();
-   //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
+  //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
   pinMode(hidro1, INPUT);
   pinMode(hidro2, INPUT);
   pinMode(hidro3, INPUT);
@@ -45,8 +45,8 @@ void setup() {
   pinMode(llave3, OUTPUT);
   Serial.println("Test del Modulo  ENC28J60");
   digitalWrite(bomba, HIGH);
-   mostrarhumedad();
-  if (!ether.begin(sizeof Ethernet::buffer, mymac, 10))
+  // mostrarhumedad();
+  if (!ether.begin(sizeof Ethernet::buffer, mymac, SS))
     Serial.println( "No se ha podido acceder a la controlador Ethernet");
  else
    Serial.println("Controlador Ethernet inicializado");
@@ -55,19 +55,15 @@ void setup() {
     Serial.println("No se pudo establecer la dirección IP");
 
   Serial.println();
- 
-
 }
-
 void loop() {
-  pagina();
-   mostrarhumedad();
+ pagina();
+  mostrarhumedad();
    delay(100); 
 }
 void mostrarhumedad() {
-  
- hum1 = dht1.readHumidity();
- tem1 = dht1.readTemperature();
+hum1 = dht.readHumidity();
+tem1 = dht.readTemperature();
   h1hum = map(analogRead(hidro1), 0, 1023, 100, 0);
   h2hum = map(analogRead(hidro2), 0, 1023, 100, 0);
   h3hum = map(analogRead(hidro3), 0, 1023, 100, 0);
@@ -80,7 +76,6 @@ void mostrarhumedad() {
     lcd.print("Tem:");
     lcd.print(tem1);
     lcd.print("C|");
-    
     lcd.setCursor(0, 1);
     lcd.print(now.day(), DEC);
     lcd.print("/");
@@ -100,15 +95,14 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.38:81/webservice/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.34:81/webservice/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019</h1>" 
-      "<a href='http://192.168.1.38:81/hidroponiamovil/'>volver al sistema de reportes</a><center/>"
+      "<a href='http://192.168.1.34:81/hidroponiamovil/'>volver al sistema de reportes</a><center/>"
       "<br>Llave 1: $S<a href=\"/?llave1=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave1=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"      
       "<br>Llave 2: $S<a href=\"/?llave2=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave2=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"
       "<br>Llave 3: $S<a href=\"/?llave3=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave3=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"
-     
       "</body></html>"      
       ),hum1,tem1,h1hum,h2hum,h3hum,Estadollave1,Estadollave2,Estadollave3);
      
