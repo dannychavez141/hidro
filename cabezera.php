@@ -23,6 +23,40 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             window.scrollTo(0, 1);
         }
     </script>
+    <script language="JavaScript"> 
+        var dias=['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+function mueveReloj(){ 
+
+      momentoActual = new Date() 
+      dia=dias[momentoActual.getDay()]+' '+momentoActual.getDate()+'/'+momentoActual.getMonth()+'/'+ momentoActual.getFullYear()
+      hora = momentoActual.getHours() 
+      minuto = momentoActual.getMinutes() 
+      segundo = momentoActual.getSeconds() 
+
+      str_segundo = new String (segundo) 
+      if (str_segundo.length == 1) 
+         segundo = "0" + segundo 
+
+      str_minuto = new String (minuto) 
+      if (str_minuto.length == 1) 
+         minuto = "0" + minuto 
+
+      str_hora = new String (hora) 
+      if (str_hora.length == 1) 
+         hora = "0" + hora 
+ if (str_hora > 12) 
+       { hora =hora -12;
+
+  mon="PM";}else mon="AM"
+
+
+      horaImprimible = dia+ " "+hora + " : " + minuto + " : " + segundo +" "+mon;
+
+      document.form_reloj.reloj.value = horaImprimible 
+
+      setTimeout("mueveReloj()",1000) 
+} 
+</script> 
     <!-- //Meta tag Keywords -->
     <!-- Custom-Files -->
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -38,7 +72,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 </head>
 
-<body>
+<body onload="mueveReloj()">
     <!-- header -->
     <header id="home">
         <!-- top-bar -->
@@ -53,8 +87,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 </p>
                             </div>
                             <div class="col-xl-4 col-6 header-top_w3layouts text-md-right">
-                                <p class="text-bl">
-                                    <span class="fa fa-phone mr-2"></span>+51 976 603 920
+                                <p class="text-bl">Hora del sistema
+                                    <form name="form_reloj"> 
+<input type="text" name="reloj" size="40" style="background-color : Black; color : White; font-family : Verdana, Arial, Helvetica; font-size : 8pt; text-align : center;" onfocus="window.document.form_reloj.reloj.blur()"> 
+</form> 
                                 </p>
                             </div>
                             <div class="col-xl-4"></div>
@@ -111,6 +147,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 <li><a href="http://192.168.1.25" class="drop-text"  target="_blank">RIEGO</a></li>
                                 <li><a href="rvirtual.php" class="drop-text">ESTADISTICAS</a></li>
                                 <li><a href="tplanta.php" class="drop-text">TIPO DE PLANTAS</a></li>
+                                <li><a href="jardines.php" class="drop-text">JARDINES</a></li>
                                 <li><a href="reporte.php" class="drop-text">REPORTES</a></li>
                                 <li><a href="usuario.php" class="drop-text">USUARIOS</a></li>
                             </ul>
