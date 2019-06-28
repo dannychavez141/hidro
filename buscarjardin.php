@@ -7,11 +7,11 @@
 
     $salida = "";
 
-    $query = "SELECT * FROM hidroponia.sembrio s join plantas p on s.idplanta=p.idplantas where concat(s.idsembrio,p.descr) like'%%'";
+    $query = "SELECT * FROM hidroponia.jardin s join plantas p on s.idplanta=p.idplantas where concat(s.idsembrio,p.descr) like'%%'";
 
     if (isset($_POST['consulta'])) {
         $q = $conn->real_escape_string($_POST['consulta']);
-        $query = "SELECT * FROM hidroponia.sembrio s join plantas p on s.idplanta=p.idplantas where concat(s.idsembrio,p.descr) like'%$q%';";
+        $query = "SELECT * FROM hidroponia.jardin s join plantas p on s.idplanta=p.idplantas where concat(s.idsembrio,p.descr) like'%$q%';";
     }
 
     $resultado = $conn->query($query);

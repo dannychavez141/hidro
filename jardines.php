@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html lang="zxx">
 
-<?php error_reporting(0);
+<?php 
+error_reporting(0);
  
  include_once'./cabezera.php'; 
 
@@ -20,7 +21,7 @@ if ($conf) {
 
   <div class="formulario">
     <label for="caja_busqueda">Buscar</label>
-    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="rplanta.php"><button class="btn btn-danger">Agregar Jardin</button></a>
+    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="rjardin.php"><button class="btn btn-danger">Agregar Jardin</button></a>
 
     <br><br>
     
