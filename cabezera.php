@@ -8,6 +8,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html lang="zxx">
 
+<?php include_once'./conexion.php';
+   $conn = $mysqli;
+    ?> 
+    
 <head>
     <title>HIDROPONIA UNU COMPUTACION MOVIL 2019-I</title>
     <!-- Meta tag Keywords -->
@@ -23,11 +27,30 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             window.scrollTo(0, 1);
         }
     </script>
+    <?php 
+    $sql = "SELECT s.idsembrio,vhorafija(s.man),vhorafija(s.mer),vhorafija(s.tar),tp.triego FROM hidroponia.jardin s join plantas p on s.idplanta=p.idplantas 
+join tplanta tp on p.idtplanta=tp.idtplanta";
+    $jardin = $conn->query($sql);
+    $cont="var cont=0;";
+    $triego="";
+    $llaves=0;
+    while ($row = $jardin->fetch_array()) {
+$horas[]="var hora".$row[0]."="."['".$row[1]."','".$row[2]."','".$row[3]."'];";
+$cont=$cont."var est".$row[0]."='a';var cont".$row[0]."=0;var salto".$row[0].";";
+$triego=$triego."var triego".$row[0]."=".$row[4].";";
+$llaves++;
+}
+ ?>
     <script language="JavaScript"> 
         var dias=['DOMINGO','LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+        <?php echo $cont;?>
+         <?php echo $triego;?>
+        <?php foreach ($horas as $hor ) {
+        echo $hor;
+    } 
+    ?>
 function mueveReloj(){ 
-
-      momentoActual = new Date() 
+    momentoActual = new Date() 
       dia=dias[momentoActual.getDay()]+' '+momentoActual.getDate()+'/'+momentoActual.getMonth()+'/'+ momentoActual.getFullYear()
       hora = momentoActual.getHours() 
       minuto = momentoActual.getMinutes() 
@@ -43,14 +66,46 @@ function mueveReloj(){
 
       str_hora = new String (hora) 
       if (str_hora.length == 1) 
-         hora = "0" + hora 
+       { hora = "0" + hora }
+    
+     var hor=hora+":" + minuto + ":" + segundo;
+     cont++;
+<?php for ($i=1; $i <=$llaves; $i++) {
+echo "hora".$i.".forEach(function(hora) {
+    if (hora==hor) {cont".$i."=cont+2; est".$i."='b';
+  salt".$i."= window.open('http://192.168.1.25?llave".$i."=ON', '_blank'); 
+ 
+}
+});
+console.log(cont".$i."+':'+cont);
+ if (est".$i."=='b') {
+    if(cont==cont".$i.")
+  {cont".$i."=cont+triego".$i."; est".$i."='c';
+    salt".$i.".close();
+}}
+ if (est".$i."=='c') {
+    if(cont==cont".$i.")
+  {cont".$i."=cont+2; est".$i."='d';
+   salt".$i."= window.open('http://192.168.1.25?llave".$i."=OFF', '_blank'); 
+}}
+if (est".$i."=='d') {
+    if(cont==cont".$i.")
+  {cont".$i."=0; 
+  est".$i."='a';
+    salt".$i.".close();
+}}";
+   
+} ?>
+
+
+
  if (str_hora > 12) 
        { hora =hora -12;
 
-  mon="PM";}else mon="AM"
+  mon="PM";}else mon="AM";
 
 
-      horaImprimible = dia+ " "+hora + " : " + minuto + " : " + segundo +" "+mon;
+      horaImprimible =dia+ " "+hora + ":" + minuto + ":" + segundo +" "+mon;
 
       document.form_reloj.reloj.value = horaImprimible 
 

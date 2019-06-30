@@ -36,10 +36,10 @@
 
             $salida.="<tr>
                         <td align='center'>".$fila[0]."</td>
-                        <td align='center'>".$fila[4]."</td>
+                        <td align='center'>".$fila[7]."</td>
                         <td align='center'>".$fila[2]."</td>
-                        <td align='center'><a href='mplanta.php?cod=".$fila[0]."' ><img src='images/riego.jpg' width='40' height='40'></a></td>
-                        <td align='center'><a href='mplanta.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
+                        <td align='center'><a href='djardin.php?cod=".$fila[0]."' ><img src='images/riego.jpg' width='40' height='40'></a></td>
+                        <td align='center'><a href='mjardin.php?cod=".$fila[0]."' ><img src='images/edit.jpg' width='40' height='40'></a></td></tr>";
 
         }
         $salida.="</tbody></table>";

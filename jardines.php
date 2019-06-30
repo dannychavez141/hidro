@@ -6,7 +6,6 @@
 error_reporting(0);
  
  include_once'./cabezera.php'; 
-
 $conf=$_GET['tconf'];
 if ($conf) {
  echo "<script>alert('Operacion Realizada exitosamente');</script>";
