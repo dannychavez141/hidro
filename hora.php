@@ -16,11 +16,11 @@ if ($conf) {
    <center>
         <section class="principal">
 
-  <h1>Insumos Registrados</h1>
+  <h1>Horas Registradas</h1>
 
   <div class="formulario">
     <label for="caja_busqueda">Buscar</label>
-    <input type="text" name="caja_busqueda" id="caja_busqueda"></input> <a href="rinsumo.php"><button class="btn btn-danger">Agregar Insumo</button></a>
+    <input type="text" name="caja_busqueda" id="caja_busqueda"></input>
 
     <br><br>
     

@@ -22,9 +22,11 @@ $accion = $_POST['baccion'];
 
     	case 'M':
         $tcod = $_POST['tcod'];
-      $tnom = $_POST['tnom'];
-          $tplan = $_POST['tplan'];
-     $sql="UPDATE `UPDATE `hidroponia`.`tplanta` SET `descr`='citric', `temp`='3', `hum`='6', `triego`='4' WHERE `idtplanta`='1';a";
+       $tnom = $_POST['tnom'];
+         $ttem = $_POST['ttemp'];
+         $thum = $_POST['thum'];
+         $ttiem = $_POST['ttiem'];
+     $sql="UPDATE `UPDATE `hidroponia`.`tplanta` SET `descr`='$tnom', `temp`='$ttem', `hum`='$thum ', `triego`='$ttiem' WHERE `idtplanta`='$tcod';";
         echo $sql;
       $rs=$mysqli->query($sql);
        header("Location: ../tplanta.php?tconf=true");

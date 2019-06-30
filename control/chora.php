@@ -5,9 +5,10 @@ $accion = $_POST['baccion'];
     echo "go?".$accion;
     switch ($accion) {
      case 'R':
-         $tnom = $_POST['tnom'];
+       $tdescr = $_POST['tdescr'];
+       $thora = $_POST['thora'];
          
-        $sql="INSERT INTO `hidroponia`.`insumos` (`descr`) VALUES ('$tnom');";
+        $sql="INSERT INTO `hidroponia`.`horas` (`descr`, `hora`) VALUES ('$tdescr', '$thora');";
         echo $sql;
     $rs=$mysqli->query($sql);
       
@@ -17,9 +18,9 @@ $accion = $_POST['baccion'];
 
     	case 'M':
       $tcod = $_POST['tcod'];
-      $descr = $_POST['descr'];
-       $hora = $_POST['hora'];
-     $sql="UPDATE `hidroponia`.`insumos` SET `descr`='$tnom' WHERE `idinsumos`='$tcod';";
+      $tdescr = $_POST['tdescr'];
+       $thora = $_POST['thora'];
+     $sql="UPDATE `hidroponia`.`horas` SET `descr`='$tdescr', `hora`='$thora' WHERE `idhoras`='$tcod';";
         echo $sql;
       $rs=$mysqli->query($sql);
        header("Location: ../hora.php?tconf=true");
