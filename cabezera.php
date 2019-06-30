@@ -148,6 +148,7 @@ function mueveReloj(){
                                 <li><a href="rvirtual.php" class="drop-text">ESTADISTICAS</a></li>
                                 <li><a href="tplanta.php" class="drop-text">TIPO DE PLANTAS</a></li>
                                 <li><a href="jardines.php" class="drop-text">JARDINES</a></li>
+                                <li><a href="hora.php" class="drop-text">HORAS</a></li>
                                 <li><a href="reporte.php" class="drop-text">REPORTES</a></li>
                                 <li><a href="usuario.php" class="drop-text">USUARIOS</a></li>
                             </ul>
