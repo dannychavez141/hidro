@@ -88,6 +88,20 @@ tem1 = dht.readTemperature();
     lcd.print(now.minute(), DEC);
     lcd.print(":");
     lcd.print(now.second(), DEC);  
+int hora=(now.hour(), DEC);
+int minu=(now.minute(), DEC);
+int segu=(now.second(), DEC);
+if(hora>8 && hora<18){
+  if(minu==0 and segu==0){
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, HIGH);}
+  if(minu==0 and segu==10){
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);}
+  }
+    
 }
 
 static word homePage() {
@@ -95,7 +109,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.34:81/webservice/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.38:81/webservice/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019</h1>" 
