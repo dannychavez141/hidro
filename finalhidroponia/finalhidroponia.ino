@@ -35,7 +35,7 @@ void setup() {
   lcd.backlight();
   dht.begin();
   RTC.begin();
-  //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
+ //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
   pinMode(hidro1, INPUT);
   pinMode(hidro2, INPUT);
   pinMode(hidro3, INPUT);
@@ -43,6 +43,9 @@ void setup() {
   pinMode(llave1, OUTPUT);
   pinMode(llave2, OUTPUT);
   pinMode(llave3, OUTPUT);
+   digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
   Serial.println("Test del Modulo  ENC28J60");
   digitalWrite(bomba, HIGH);
   // mostrarhumedad();
@@ -92,14 +95,16 @@ int hora=(now.hour(), DEC);
 int minu=(now.minute(), DEC);
 int segu=(now.second(), DEC);
 if(hora>8 && hora<18){
-  if(minu==0 and segu==0){
+  if(minu==0 && segu==0){
     digitalWrite(llave1, HIGH);
     digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);}
-  if(minu==0 and segu==10){
+    digitalWrite(llave3, HIGH);
+      digitalWrite(bomba, LOW);}
+  if(minu==0 && segu==5){
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);}
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);}
   }
     
 }
