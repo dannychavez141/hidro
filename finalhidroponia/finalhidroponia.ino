@@ -114,7 +114,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.38:81/webservice/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.38:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019</h1>" 
