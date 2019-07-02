@@ -12,7 +12,7 @@ const int bomba = 7;
 char* Estadollave1="OFF";
 char* Estadollave2="OFF";
 char* Estadollave3="OFF";
-char modo='0';
+char modo='a';
 #include "DHT.h"
 #define DHTPIN 2
 #define hidro1 A0
@@ -91,21 +91,33 @@ tem1 = dht.readTemperature();
     lcd.print(now.minute(), DEC);
     lcd.print(":");
     lcd.print(now.second(), DEC);  
-int hora=(now.hour(), DEC);
-int minu=(now.minute(), DEC);
-int segu=(now.second(), DEC);
-if(hora>8 && hora<18){
+int hora=(now.hour());
+int minu=(now.minute());
+int segu=(now.second());
+Serial.print(hora);
+Serial.print(':');
+Serial.print(minu);
+Serial.print(':');
+Serial.println(segu);
+if(hora>7 && hora<18){
+  if(modo=='a'){
   if(minu==0 && segu==0){
     digitalWrite(llave1, HIGH);
     digitalWrite(llave2, HIGH);
     digitalWrite(llave3, HIGH);
-      digitalWrite(bomba, LOW);}
-  if(minu==0 && segu==5){
+      digitalWrite(bomba, LOW);
+      Estadollave1="ON";Estadollave2="ON"; Estadollave3="ON";
+      }
+      modo='b';
+      }
+    if(modo=='b'){
+  if(minu==0 && segu==10){
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
-      digitalWrite(bomba, HIGH);}
-  }
+      digitalWrite(bomba, HIGH);
+      Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="OFF";}
+  } modo='a';}
     
 }
 
@@ -114,7 +126,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' target='_blank' content='5;url=http://192.168.1.38:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' content='3000;url=http://192.168.1.38:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019</h1>" 
