@@ -129,11 +129,11 @@ static word homePage() {
       "<meta http-equiv='refresh' content='3000;url=http://192.168.1.38:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
-      "<h1>Area de control hidroponia unu 2019</h1>" 
+      "<h1>Area de control hidroponia unu 2019<br>" 
       "<a href='http://192.168.1.34:81/hidroponiamovil/'>volver al sistema de reportes</a><center/>"
       "<br>Llave 1: $S<a href=\"/?llave1=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave1=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"      
       "<br>Llave 2: $S<a href=\"/?llave2=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave2=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"
-      "<br>Llave 3: $S<a href=\"/?llave3=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave3=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"
+      "<br>Llave 3: $S<a href=\"/?llave3=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave3=OFF\"><input type=\"button\" value=\"OFF\"></a> <br></h1>"
       "</body></html>"      
       ),hum1,tem1,h1hum,h2hum,h3hum,Estadollave1,Estadollave2,Estadollave3);
      
