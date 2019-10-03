@@ -4,7 +4,7 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 byte Ethernet::buffer[1000];
-static byte myip[] = {192,168,1,25};
+static byte myip[] = {192,168,100,9};
 const int llave1 = 4;
 const int llave2 = 5;
 const int llave3 = 6;
@@ -101,24 +101,57 @@ Serial.print(':');
 Serial.println(segu);
 if(hora>7 && hora<18){
   if(modo=='a'){
-  if(minu==0 && segu==0){
+  if(minu==30 && segu==0){
+    
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      delay(1000);
     digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
-      Estadollave1="ON";Estadollave2="ON"; Estadollave3="ON";
+      Estadollave1="ON";Estadollave2="OFF"; Estadollave3="OFF";
       }
       modo='b';
       }
     if(modo=='b'){
-  if(minu==0 && segu==10){
+  if(minu==30 && segu==10){
+    delay(1500);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      delay(1000);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, LOW);
+      Estadollave1="OFF";Estadollave2="ON"; Estadollave3="OFF";
+  } modo='c';}
+  if(modo=='c'){
+  if(minu==30 && segu==21){
+    delay(1500);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      delay(1000);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, HIGH);
+      digitalWrite(bomba, LOW);
+      Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="ON";
+  } modo='d';}
+    if(modo=='d'){
+  if(minu==30 && segu==32){
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
       Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="OFF";}
   } modo='a';}
-    
 }
 
 static word homePage() {
@@ -126,7 +159,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' content='3000;url=http://192.168.1.38:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' content='3000;url=http://192.168.100.10:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019<br>" 
