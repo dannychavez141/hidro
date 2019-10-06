@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<meta http-equiv='refresh' target='_blank' content='3;url=http://192.168.1.38:81/hidroponiamovil/rvirtual.php'>
+<meta http-equiv='refresh' target='_blank' content='3;url=http://192.168.1.35/hidro/rvirtual.php'>
 <?php error_reporting(0);
  include_once'./cabezera.php'; 
 require 'conexion.php';
@@ -19,7 +19,7 @@ require 'conexion.php';
                 </div>
                 <div class="col-md-6 progress-w3ls mt-5">
                     <?php  
-$query = "SELECT * FROM hidroponia.reporte order by idreporte desc limit 1;";
+$query = "SELECT * FROM reporte order by idreporte desc limit 1;";
     $resultado = $mysqli->query($query);
 while($row = $resultado->fetch_array())
     {
@@ -36,6 +36,7 @@ while($row = $resultado->fetch_array())
                             <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: <?php echo $row[2]."%";?>" aria-valuenow="<?php echo $row[2];?>" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
+                    <?php /* ?>
                     <div class="progress-one">
                         <h4 class="progress-w3">HUMEDAD DE SUELO JARDIN 1: <?php echo $row[3]."%"; ?></h4>
                         <div class="progress">
@@ -54,7 +55,7 @@ while($row = $resultado->fetch_array())
                             <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: <?php echo $row[5]."%";?>" aria-valuenow="<?php echo $row[5];?>" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
-
+<?php */ ?>
                     <?php } ?>
                 </div>
 

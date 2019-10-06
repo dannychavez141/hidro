@@ -4,7 +4,7 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 byte Ethernet::buffer[1000];
-static byte myip[] = {192,168,100,9};
+static byte myip[] = {192,168,1,25};
 const int llave1 = 4;
 const int llave2 = 5;
 const int llave3 = 6;
@@ -15,18 +15,15 @@ char* Estadollave3="OFF";
 char modo='a';
 #include "DHT.h"
 #define DHTPIN 2
-#define hidro1 A0
-#define hidro2 A1
-#define hidro3 A2
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 RTC_DS1307 RTC;
 int t;
 long hum1=0;
 long tem1=0;
-long h1hum=0;
-long h2hum=0;
-long h3hum=0;
+long h1llave=0;
+long h2llave=0;
+long h3llave=0;
 long hu=0;
 int pos = 0;
 void setup() {
@@ -36,9 +33,6 @@ void setup() {
   dht.begin();
   RTC.begin();
  //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
-  pinMode(hidro1, INPUT);
-  pinMode(hidro2, INPUT);
-  pinMode(hidro3, INPUT);
    pinMode(bomba, OUTPUT);
   pinMode(llave1, OUTPUT);
   pinMode(llave2, OUTPUT);
@@ -46,7 +40,7 @@ void setup() {
    digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
-  Serial.println("Test del Modulo  ENC28J60");
+  Serial.println("Conexion Modulo  ENC28J60");
   digitalWrite(bomba, HIGH);
   // mostrarhumedad();
   if (!ether.begin(sizeof Ethernet::buffer, mymac, SS))
@@ -67,10 +61,7 @@ void loop() {
 void mostrarhumedad() {
 hum1 = dht.readHumidity();
 tem1 = dht.readTemperature();
-  h1hum = map(analogRead(hidro1), 0, 1023, 100, 0);
-  h2hum = map(analogRead(hidro2), 0, 1023, 100, 0);
-  h3hum = map(analogRead(hidro3), 0, 1023, 100, 0);
-  DateTime now = RTC.now(); 
+DateTime now = RTC.now(); 
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("|Hum:");
@@ -101,6 +92,7 @@ Serial.print(':');
 Serial.println(segu);
 if(hora>7 && hora<18){
   if(modo=='a'){
+    
   if(minu==30 && segu==0){
     
     digitalWrite(llave1, LOW);
@@ -113,8 +105,10 @@ if(hora>7 && hora<18){
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
       Estadollave1="ON";Estadollave2="OFF"; Estadollave3="OFF";
-      }
-      modo='b';
+      h1llave=1;
+     modo='b';
+     }
+      
       }
     if(modo=='b'){
   if(minu==30 && segu==10){
@@ -129,7 +123,9 @@ if(hora>7 && hora<18){
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
       Estadollave1="OFF";Estadollave2="ON"; Estadollave3="OFF";
-  } modo='c';}
+      h2llave=1;
+  modo='c';} 
+  }
   if(modo=='c'){
   if(minu==30 && segu==21){
     delay(1500);
@@ -143,15 +139,22 @@ if(hora>7 && hora<18){
     digitalWrite(llave3, HIGH);
       digitalWrite(bomba, LOW);
       Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="ON";
-  } modo='d';}
+  modo='d';}
+  }
     if(modo=='d'){
   if(minu==30 && segu==32){
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="OFF";}
-  } modo='a';}
+      Estadollave1="OFF";Estadollave2="OFF"; Estadollave3="OFF";
+      h1llave=0;
+      h2llave=0;
+      h3llave=0;
+     modo='a'; }
+  } 
+  }
+  
 }
 
 static word homePage() {
@@ -159,7 +162,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' content='3000;url=http://192.168.100.10:81/hidro/subir.php?h=$L&&t=$L&&h1=$L&&h2=$L&&h3=$L'>"
+      "<meta http-equiv='refresh' content='5;url=http://192.168.1.35/hidro/subir.php?h=$L&t=$L&h1=$L&h2=$L&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:red;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019<br>" 
@@ -168,7 +171,7 @@ static word homePage() {
       "<br>Llave 2: $S<a href=\"/?llave2=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave2=OFF\"><input type=\"button\" value=\"OFF\"></a> <br>"
       "<br>Llave 3: $S<a href=\"/?llave3=ON\"><input type=\"button\" value=\"ON\"></a><a href=\"/?llave3=OFF\"><input type=\"button\" value=\"OFF\"></a> <br></h1>"
       "</body></html>"      
-      ),hum1,tem1,h1hum,h2hum,h3hum,Estadollave1,Estadollave2,Estadollave3);
+      ),hum1,tem1,h1llave,h2llave,h3llave,Estadollave1,Estadollave2,Estadollave3);
      
   return bfill.position();
 }
@@ -183,33 +186,39 @@ void pagina(){word len = ether.packetReceive();
       Serial.println("Comando ON recivido");
       digitalWrite(llave1, HIGH);
       Estadollave1 = "ON";
+      h1llave=1;
     }
 
     if(strstr((char *)Ethernet::buffer + pos, "GET /?llave1=OFF") != 0) {
    
       digitalWrite(llave1, LOW);
        Estadollave1= "OFF";
+       h1llave=0;
     }
     if(strstr((char *)Ethernet::buffer + pos, "GET /?llave2=ON") != 0) {
     
       digitalWrite(llave2, HIGH);
       Estadollave2 = "ON";
+      h2llave=1;
     }
 
     if(strstr((char *)Ethernet::buffer + pos, "GET /?llave2=OFF") != 0) {
     
       digitalWrite(llave2, LOW);
        Estadollave2= "OFF";
+       h2llave=0;
     }
     if(strstr((char *)Ethernet::buffer + pos, "GET /?llave3=ON") != 0) {
  
       digitalWrite(llave3, HIGH);
       Estadollave3 = "ON";
+      h3llave=1;
     }
     if(strstr((char *)Ethernet::buffer + pos, "GET /?llave3=OFF") != 0) {
    
       digitalWrite(llave3, LOW);
        Estadollave3= "OFF";
+       h3llave=0;
     }      
     ether.httpServerReply(homePage()); // se envia página Web
   }}

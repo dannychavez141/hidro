@@ -13,7 +13,7 @@ $sql="INSERT INTO `hidroponia`.`reporte` (`hum`, `temp`, `hsuelo1`, `hsuelo2`, `
         $rs=$mysqli->query($sql);         
         $mysqli->close();
    header("Status: 301 Moved Permanently");
-header("Location: http://192.168.100.9");
+header("Location: http://192.168.1.25");
 exit;
 
 ?>
