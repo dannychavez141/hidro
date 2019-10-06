@@ -163,7 +163,7 @@ static word homePage() {
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
       "<meta http-equiv='refresh' content='5;url=http://192.168.100.50/hidro/subir.php?h=$L&t=$L&h1=$L&h2=$L&h3=$L'>"
-       "<meta charset='utf-8'></head><body style='background-color:yellow;'>"
+       "<meta charset='utf-8'></head><body style='background-color:cian;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019<br>" 
       "<a href='http://192.168.100.50/hidro/'>volver al sistema de reportes</a><center/>"
