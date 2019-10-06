@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zxx">
-<meta http-equiv='refresh' target='_blank' content='3;url=http://192.168.1.35/hidro/rvirtual.php'>
+<meta http-equiv='refresh' target='_blank' content='3;url=http://192.168.100.5/hidro/rvirtual.php'>
 <?php error_reporting(0);
  include_once'./cabezera.php'; 
 require 'conexion.php';
