@@ -4,11 +4,11 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2); 
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 byte Ethernet::buffer[1000];
-static byte myip[] = {192,168,100,5};
-const int llave1 = 4;
-const int llave2 = 5;
-const int llave3 = 6;
-const int bomba = 7;
+static byte myip[] = {192,168,1,5};
+const int llave1 = 3;
+const int llave2 = 4;
+const int llave3 = 5;
+const int bomba = 6;
 char* Estadollave1="OFF";
 char* Estadollave2="OFF";
 char* Estadollave3="OFF";
@@ -162,7 +162,7 @@ static word homePage() {
  BufferFiller bfill = ether.tcpOffset();
  bfill.emit_p(PSTR("<!DOCTYPE html>\n"
       "<html><head><title>Hidroponia Unu</title>"
-      "<meta http-equiv='refresh' content='5;url=http://192.168.100.50/hidro/subir.php?h=$L&t=$L&h1=$L&h2=$L&h3=$L'>"
+      "<meta http-equiv='refresh' content='60;url=http://192.168.1.35/hidro/subir.php?h=$L&t=$L&h1=$L&h2=$L&h3=$L'>"
        "<meta charset='utf-8'></head><body style='background-color:#997EE7;'>"
       "<center>"
       "<h1>Area de control hidroponia unu 2019<br>" 
