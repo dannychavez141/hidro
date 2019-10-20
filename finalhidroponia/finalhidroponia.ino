@@ -32,6 +32,9 @@ int h3llave=0;
 int horau=0;
 int minuu=0;
 int seguu=0;
+int c1=0;
+int c2=0;
+int c3=0;
 const int p1 = A2;
 const int p2 = A1;
 const int p3 =A0 ;
@@ -105,10 +108,66 @@ void menu()
   valores();
   leer();
   mostrar();
-  
-   if(v2==1){}
-   if(v3==1){}
-   if(v4==1){}
+  if(c1!=0){
+    c1=c1+1;
+    if(c1>20){
+      digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      c1=0;
+      }
+    }
+   
+   if(v2==1){digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      h1llave=1;
+     h2llave=0;
+     h3llave=0;
+      envio();
+      delay(1000);
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, LOW);
+      c1=1;
+      }
+   if(v3==1){digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      h1llave=1;
+     h2llave=0;
+     h3llave=0;
+      envio();
+      delay(1000);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, LOW);
+       c1=1;}
+   if(v5==1){digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+      h1llave=1;
+     h2llave=0;
+     h3llave=0;
+      envio();
+      delay(1000);
+    digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, HIGH);
+      digitalWrite(bomba, LOW);
+       c1=1;}
+       if(v4==1){digitalWrite(llave1, LOW);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, LOW);
+      digitalWrite(bomba, HIGH);
+     
+       c1=0;}
    if(v6==1){modo=2;
    h1=leerbd(0);
   m1=leerbd(1);}
@@ -335,7 +394,7 @@ contador=contador+1;
 }
 if(hora>h1 && hora<h2){
 int evalua=tiempo-contador;
-  
+  if(evalua<0){contador=0;}
   if(estado=='a'){
     
   if(evalua==0 && segu==0){
@@ -352,7 +411,7 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
-     
+     c1=-50;
      estado='b';
      }
       
@@ -374,6 +433,7 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, HIGH);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
+       c1=-50;
   estado='c';
   } 
   }
@@ -393,7 +453,7 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, HIGH);
       digitalWrite(bomba, LOW);
-      
+       c1=-50;
   estado='d';}
   }
     if(estado=='d'){
@@ -410,7 +470,7 @@ int evalua=tiempo-contador;
      horau=hora;
 minuu=minu;
 seguu=segu;
-      
+       c1=0;
      estado='a'; 
      contador=0;
      } 
