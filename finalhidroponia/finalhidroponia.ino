@@ -35,6 +35,9 @@ int seguu=0;
 int c1=0;
 int c2=0;
 int c3=0;
+int hora=0;
+int minu=0;
+int segu=0;
 const int p1 = A2;
 const int p2 = A1;
 const int p3 =A0 ;
@@ -115,6 +118,10 @@ void menu()
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
+      h1llave=0;
+     h2llave=0;
+     h3llave=0;
+     envio();
       c1=0;
       }
     }
@@ -126,47 +133,62 @@ void menu()
       h1llave=1;
      h2llave=0;
      h3llave=0;
-      envio();
+      //envio();
       delay(1000);
     digitalWrite(llave1, HIGH);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
       c1=1;
+      horau=hora;
+minuu=minu;
+seguu=segu;
       }
    if(v3==1){digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      h1llave=1;
-     h2llave=0;
+      h1llave=0;
+     h2llave=1;
      h3llave=0;
-      envio();
+      //envio();
       delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, HIGH);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, LOW);
-       c1=1;}
+       c1=1;
+       horau=hora;
+minuu=minu;
+seguu=segu;
+       }
    if(v5==1){digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      h1llave=1;
+      h1llave=0;
      h2llave=0;
-     h3llave=0;
-      envio();
+     h3llave=1;
+     // envio();
       delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, HIGH);
       digitalWrite(bomba, LOW);
-       c1=1;}
+       c1=1;
+       horau=hora;
+minuu=minu;
+seguu=segu;
+}
        if(v4==1){digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-     
+    
+      envio(); 
+      h1llave=0;
+     h2llave=0;
+     h3llave=0;
        c1=0;}
    if(v6==1){modo=2;
    h1=leerbd(0);
@@ -381,9 +403,9 @@ DateTime now = RTC.now();
     lcd.print(":");
     lcd.print(seguu); 
     
-int hora=(now.hour());
-int minu=(now.minute());
-int segu=(now.second());
+hora=(now.hour());
+minu=(now.minute());
+segu=(now.second());
 Serial.print(hora);
 Serial.print(':');
 Serial.print(minu);
