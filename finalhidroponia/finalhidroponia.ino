@@ -121,7 +121,7 @@ void menu()
       h1llave=0;
      h2llave=0;
      h3llave=0;
-     envio();
+     envio(0,0,0);
       c1=0;
       }
     }
@@ -133,7 +133,7 @@ void menu()
       h1llave=1;
      h2llave=0;
      h3llave=0;
-      //envio();
+      envio(1,0,0);
       delay(1000);
     digitalWrite(llave1, HIGH);
     digitalWrite(llave2, LOW);
@@ -151,7 +151,7 @@ seguu=segu;
       h1llave=0;
      h2llave=1;
      h3llave=0;
-      //envio();
+      envio(0,1,0);
       delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, HIGH);
@@ -169,7 +169,7 @@ seguu=segu;
       h1llave=0;
      h2llave=0;
      h3llave=1;
-     // envio();
+     envio(0,0,1);
       delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
@@ -185,10 +185,7 @@ seguu=segu;
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
     
-      envio(); 
-      h1llave=0;
-     h2llave=0;
-     h3llave=0;
+      envio(0,0,0); 
        c1=0;}
    if(v6==1){modo=2;
    h1=leerbd(0);
@@ -424,10 +421,7 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      h1llave=1;
-     h2llave=0;
-     h3llave=0;
-      envio();
+      envio(1,0,0);
       delay(1000);
     digitalWrite(llave1, HIGH);
     digitalWrite(llave2, LOW);
@@ -435,8 +429,7 @@ int evalua=tiempo-contador;
       digitalWrite(bomba, LOW);
      c1=-50;
      estado='b';
-     }
-      
+     } 
       }
     if(estado=='b'){
   if(evalua==0 && segu==10){
@@ -446,10 +439,8 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-     h1llave=0;
-     h2llave=1;
-     h3llave=0; 
-    envio();
+     
+    envio(0,1,0);
     delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, HIGH);
@@ -466,10 +457,8 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      h1llave=0;
-     h2llave=0;
-     h3llave=1; 
-      envio();
+      
+      envio(0,0,1);
       delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
@@ -484,10 +473,7 @@ int evalua=tiempo-contador;
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
-      h1llave=0;
-      h2llave=0;
-      h3llave=0;
-       envio();
+       envio(0,0,0);
       delay(1000);
      horau=hora;
 minuu=minu;
@@ -501,18 +487,18 @@ seguu=segu;
   }
   
 }
-void envio(){
+void envio(int v1,int v2, int v3){
   if (client.connect(server, 80)>0) {  // Conexion con el servidor
     client.print("GET /hidro/subir.php?h="); // Enviamos los datos por GET
     client.print(hum1);
     client.print("&t="); // Enviamos los datos por GET temperatura
     client.print(tem1);
     client.print("&h1="); // Enviamos los datos por GET estado 1
-   client.print(h1llave);
+   client.print(v1);
    client.print("&h2="); // Enviamos los datos por GET estado 1
-   client.print(h2llave);
+   client.print(v2);
    client.print("&h3="); // Enviamos los datos por GET estado 1
-   client.print(h3llave);   
+   client.print(v3);    
     client.println(" HTTP/1.0");
     client.println("User-Agent: Arduino 1.0");
     client.println();
