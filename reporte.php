@@ -3,7 +3,7 @@
 <html lang="zxx">
 <?php error_reporting(0);
  include_once'./cabezera.php'; 
-  $dia=date('d');
+  $dia=date('d')+1;
   //if ($dia<10) {
 //   $dia='0'.$dia;
  // }

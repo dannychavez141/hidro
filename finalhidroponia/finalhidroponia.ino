@@ -413,7 +413,7 @@ contador=contador+1;
 }
 if(hora>h1 && hora<h2){
 int evalua=tiempo-contador;
-  if(evalua<0){contador=0;}
+  if(evalua<-1){contador=0;}
   if(estado=='a'){
     
   if(evalua==0 && segu==0){
