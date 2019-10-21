@@ -199,7 +199,7 @@ if (est".$i."=='d') {
                             <a href="#">SISTEMA<span class="fa fa-angle-down" aria-hidden="true"></span></a>
                             <input type="checkbox" id="drop-2" />
                             <ul>
-                                <li><a href="http://192.168.100.5" class="drop-text"  target="_blank">RIEGO</a></li>
+                              <!--  <li><a href="http://192.168.100.5" class="drop-text"  target="_blank">RIEGO</a></li>-->
                                 <li><a href="rvirtual.php" class="drop-text">ESTADISTICAS</a></li>
                                 <li><a href="tplanta.php" class="drop-text">TIPO DE PLANTAS</a></li>
                                 <li><a href="jardines.php" class="drop-text">JARDINES</a></li>

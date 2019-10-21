@@ -434,7 +434,7 @@ int evalua=tiempo-contador;
     if(estado=='b'){
   if(evalua==0 && segu==10){
    
-    delay(1500);
+    delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
@@ -452,7 +452,7 @@ int evalua=tiempo-contador;
   }
   if(estado=='c'){
   if(evalua==0 && segu==21){
-    delay(1500);
+    delay(1000);
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, LOW);
     digitalWrite(llave3, LOW);
