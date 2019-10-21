@@ -14,6 +14,4 @@ $sql="INSERT INTO `hidroponia`.`reporte` (`hum`, `temp`, `hsuelo1`, `hsuelo2`, `
         $mysqli->close();
  
 exit;
-
 ?>
-htm
