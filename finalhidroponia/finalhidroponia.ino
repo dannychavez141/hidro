@@ -3,16 +3,12 @@
 #include "RTClib.h"
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27,20,4);
-#include <UIPEthernet.h> // Librería Ethernet usada con el módulo ENC28J60
-byte direccion_mac[]={0x74,0x69,0x69,0x2D,0x30,0x31 }; // Dirección MAC inventada
-IPAddress direccion_ip_fija(192,168,1,6); // Dirección IP elegida para el módulo
-IPAddress servidor_dns(8,8,8,8); // Servidor OpenNIC (de Alejandro Bonet, http://opennic.alargador.org)
-IPAddress puerta_enlace(192,168,1,1); // Dirección IP del router
-IPAddress mascara_red(255,255,255,0); // Máscara de la red
-IPAddress server(192,168,1,35); // Dirección IP del servidor web (en la intranet)
-//char url_servidor_web[]="hidroponia.unu.com"; // URL poético para un gestor de sueño (en Internet)
-EthernetClient client;
-byte estado_conexion;
+#include <SoftwareSerial.h>
+SoftwareSerial SerialESP8266(2,3); // RX, TX
+//String server = "192.168.1.35";
+String server = "pagina.com";
+//variables para enviar al servidor
+String cadena="";
 const int llave1 = 3;
 const int llave2 = 4;
 const int llave3 = 5;
@@ -77,8 +73,7 @@ Serial.begin(9600);
     digitalWrite(llave3, LOW);
       digitalWrite(bomba, HIGH);
       Serial.println("Conectando con el servidor ...");
-  Ethernet.begin(direccion_mac,direccion_ip_fija,servidor_dns,puerta_enlace,mascara_red);
-  Serial.println(Ethernet.localIP());
+ 
 }
 
 void loop() {
@@ -488,25 +483,139 @@ seguu=segu;
   
 }
 void envio(int v1,int v2, int v3){
-  if (client.connect(server, 80)>0) {  // Conexion con el servidor
-    client.print("GET /hidro/subir.php?h="); // Enviamos los datos por GET
-    client.print(hum1);
-    client.print("&t="); // Enviamos los datos por GET temperatura
-    client.print(tem1);
-    client.print("&h1="); // Enviamos los datos por GET estado 1
-   client.print(v1);
-   client.print("&h2="); // Enviamos los datos por GET estado 1
-   client.print(v2);
-   client.print("&h3="); // Enviamos los datos por GET estado 1
-   client.print(v3);    
-    client.println(" HTTP/1.0");
-    client.println("User-Agent: Arduino 1.0");
-    client.println();
-    Serial.println("Conectado");
-  } else {
-    Serial.println("Fallo en la conexion");
+  //Nos conectamos con el servidor:
+      
+      SerialESP8266.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");
+      if( SerialESP8266.find("OK"))
+      {  
+          cadena="";
+          Serial.println();
+          Serial.println();
+          Serial.println("ESP8266 conectado con el servidor...");             
+    
+          //Armamos el encabezado de la peticion http
+          String peticionHTTP= "GET /control/test/registro.php?id=";
+          peticionHTTP=peticionHTTP+String(codigo)+" HTTP/1.1\r\n";
+            //peticionHTTP=peticionHTTP+" HTTP/1.1\r\n";
+          peticionHTTP=peticionHTTP+"Host: "+server+"\r\n";
+          peticionHTTP=peticionHTTP+"Connetion: close\r\n\r\n";
+    
+          //Enviamos el tamaño en caracteres de la peticion http:  
+          SerialESP8266.print("AT+CIPSEND=");
+          SerialESP8266.println(peticionHTTP.length());
+
+          //esperamos a ">" para enviar la petcion  http
+          if(SerialESP8266.find(">")) // ">" indica que podemos enviar la peticion http
+          {
+            Serial.println("Enviando HTTP . . .");
+            SerialESP8266.println(peticionHTTP);
+            if( SerialESP8266.find("SEND OK"))
+            {  
+              Serial.println("Peticion HTTP enviada:");
+              Serial.println();
+              Serial.println(peticionHTTP);
+              Serial.println("Esperando respuesta...");
+              
+              boolean fin_respuesta=false; 
+              long tiempo_inicio=millis(); 
+              cadena="";
+              
+              while(fin_respuesta==false)
+              {
+                  while(SerialESP8266.available()>0) 
+                  {
+char c=SerialESP8266.read();
+                     
+                      if(c=='#'){
+                       if(est==0){est=1;}else{est=0;}
+                        
+                       }
+                      if(est==1)
+                       {
+                      Serial.write(c);
+                      cadena.concat(c);  //guardamos la respuesta en el string "cadena"
+                      }
+
+                  }
+                  //finalizamos si la respuesta es mayor a 500 caracteres
+                  if(cadena.length()>100) //Pueden aumentar si tenen suficiente espacio en la memoria
+                  {
+                    Serial.println("La respuesta a excedido el tamaño maximo");
+                    
+                    SerialESP8266.println("AT+CIPCLOSE");
+                    if( SerialESP8266.find("OK"))
+                      Serial.println("Conexion finalizada");
+                    fin_respuesta=true;
+                  }
+                  if((millis()-tiempo_inicio)>1000) //Finalizamos si ya han transcurrido 10 seg
+                  {Serial.println();
+                    Serial.println("Tiempo de espera agotado");
+                    SerialESP8266.println("AT+CIPCLOSE");
+                    if( SerialESP8266.find("OK"))
+                      Serial.println("Conexion finalizada");
+                    fin_respuesta=true;
+                  }
+                  if(cadena.indexOf("CLOSED")>0) //si recibimos un CLOSED significa que ha finalizado la respuesta
+                  {
+                    Serial.println();
+                    Serial.println("Cadena recibida correctamente, conexion finalizada");         
+                    fin_respuesta=true;
+                  }
+              }
+            }
+            else
+            {
+              Serial.println("No se ha podido enviar HTTP.....");
+              reiniciar();
+           }            
+          }
+      }
+      else
+      {
+        Serial.println("No se ha podido conectarse con el servidor");
+      }
+
+        
+  //-------------------------------------------------------------------------------
+ respuestabdtemp(cadena);
+ cadena="";
+  delay(1000); //pausa de 10seg antes de conectarse nuevamente al servidor (opcional)
+
   }
-  }
+  void iniciar(){SerialESP8266.setTimeout(2000);
+  
+  //Verificamos si el ESP8266 responde
+  SerialESP8266.println("AT");
+  if(SerialESP8266.find("OK"))
+    Serial.println("Respuesta AT correcto");
+  else
+    Serial.println("Error en ESP8266");
+
+  //-----Configuración de red-------//Podemos comentar si el ESP ya está configurado
+
+    //ESP8266 en modo estación (nos conectaremos a una red existente)
+    SerialESP8266.println("AT+CWMODE=1");
+    if(SerialESP8266.find("OK"))
+      Serial.println("ESP8266 en modo Estacion");
+      
+    //Nos conectamos a una red wifi 
+    SerialESP8266.println("AT+CWJAP=\"Fdavila\",\"acm1ptbt\"");
+    Serial.println("Conectandose a la red ...");
+    SerialESP8266.setTimeout(10000); //Aumentar si demora la conexion
+    if(SerialESP8266.find("OK"))
+      Serial.println("WIFI conectado");
+    else
+      Serial.println("Error al conectarse en la red");
+    SerialESP8266.setTimeout(2000);
+    //Desabilitamos las conexiones multiples
+    SerialESP8266.println("AT+CIPMUX=0");
+    if(SerialESP8266.find("OK"))
+      Serial.println("Multiconexiones deshabilitadas");
+    
+
+  delay(1000);}
+
+  
 void actualizarbd(int id,int valor) {
   EEPROM.write(id, valor);
   
