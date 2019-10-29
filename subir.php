@@ -7,9 +7,9 @@ error_reporting(0);
   $hsuelo2 = $_GET['h2'];
    $hsuelo3 = $_GET['h3'];
    $hu=($hsuelo1+$hsuelo3)/2;
-$sql="INSERT INTO `hidroponia`.`reporte` (`hum`, `temp`, `hsuelo1`, `hsuelo2`, `hsuelo3`, `fecha`) VALUES ('$humedad','$temp','$hsuelo1','$hsuelo2','$hsuelo3',now());";
+$sql="INSERT INTO `reporte` (`hum`, `temp`, `hsuelo1`, `hsuelo2`, `hsuelo3`, `fecha`) VALUES ('$humedad','$temp','$hsuelo1','$hsuelo2','$hsuelo3',now());";
 
-     echo $sql;
+     echo "#".$sql."#";
         $rs=$mysqli->query($sql);         
         $mysqli->close();
  
