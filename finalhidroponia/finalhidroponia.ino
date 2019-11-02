@@ -5,7 +5,7 @@
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 #include <SoftwareSerial.h>
 SoftwareSerial SerialESP8266(2, 3); // RX, TX
-String server = "192.168.1.35";
+String server = "192.168.43.28";
 //String server = "pagina.com";
 //variables para enviar al servidor
 String cadena = "";
@@ -23,6 +23,8 @@ float contador = 0;
 int tiempo = 0;
 int hum1 = 0;
 int tem1 = 0;
+char temp2="";
+        char c ="";
 int horau = 0;
 int minuu = 0;
 int seguu = 0;
@@ -74,7 +76,7 @@ void setup() {
   digitalWrite(llave3, LOW);
   digitalWrite(bomba, HIGH);
   SerialESP8266.begin(9600);
-  //iniciar();
+ // iniciar();
 }
 
 void loop() {
@@ -123,7 +125,7 @@ void modo1() {
   valores();
   if (c1 != 0) {
     c1 = c1 + 1;
-    if (c1 > 20) {
+    if (c1 > 200) {
       digitalWrite(llave1, LOW);
       digitalWrite(llave2, LOW);
       digitalWrite(llave3, LOW);
@@ -159,7 +161,7 @@ void modo1() {
     digitalWrite(bomba, HIGH);
 
     envio(0, 1, 0);
-    delay(1000);
+    delay(1000); 
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, HIGH);
     digitalWrite(llave3, LOW);
@@ -405,7 +407,7 @@ void iniciar() {
     Serial.println("ESP8266 en modo Estacion");
 
   //Nos conectamos a una red wifi
-  SerialESP8266.println("AT+CWJAP=\"Fdavila\",\"acm1ptbt\"");
+  SerialESP8266.println("AT+CWJAP=\" \",\"12345678\"");
   Serial.println("Conectandose a la red ...");
   SerialESP8266.setTimeout(10000); //Aumentar si demora la conexion
   if (SerialESP8266.find("OK"))
@@ -467,7 +469,7 @@ void valores() {
     Serial.print(':');
     Serial.println(segu);*/
   if (segu == 0) {
-    contador = contador + 1;
+    contador = contador + 0.25;
   }
   if (hora > h1 && hora < h2) {
     int evalua = tiempo - contador;
@@ -566,7 +568,6 @@ void envio(int v1, int v2, int v3) {
     peticionHTTP = peticionHTTP + String(v1) + "&h2=";
     peticionHTTP = peticionHTTP + String(v2) + "&h3=";
     peticionHTTP = peticionHTTP + String(v3) + " HTTP/1.1\r\n";
-    //peticionHTTP=peticionHTTP+" HTTP/1.1\r\n";
     peticionHTTP = peticionHTTP + "Host: " + server + "\r\n";
     peticionHTTP = peticionHTTP + "Connetion: close\r\n\r\n";
 
@@ -576,7 +577,7 @@ void envio(int v1, int v2, int v3) {
 
     //esperamos a ">" para enviar la petcion  http
     if (SerialESP8266.find(">")) // ">" indica que podemos enviar la peticion http
-    {
+    { 
       Serial.println("Enviando HTTP . . .");
       SerialESP8266.println(peticionHTTP);
       if ( SerialESP8266.find("SEND OK"))
@@ -591,13 +592,17 @@ void envio(int v1, int v2, int v3) {
         cadena = "";
 
         while (fin_respuesta == false)
-        {
+        { 
           while (SerialESP8266.available() > 0)
           {
-            char c = SerialESP8266.read();
-            Serial.write(c);
-            cadena.concat(c);  //guardamos la respuesta en el string "cadena"
-
+           c = SerialESP8266.read();
+           if(c=='#'){temp2=c;
+           
+           }
+           if(temp2=='#'){
+           Serial.write(c);
+           cadena.concat(c);  //guardamos la respuesta en el string "cadena"
+           }
 
           }
           //finalizamos si la respuesta es mayor a 500 caracteres
