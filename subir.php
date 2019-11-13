@@ -12,6 +12,6 @@ $sql="INSERT INTO `reporte` (`hum`, `temp`, `hsuelo1`, `hsuelo2`, `hsuelo3`, `fe
      echo "#".$sql."#";
         $rs=$mysqli->query($sql);         
         $mysqli->close();
- 
+
 exit;
 ?>

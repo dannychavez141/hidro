@@ -1,20 +1,29 @@
 #include <EEPROM.h>
 #include <Wire.h>
 #include "RTClib.h"
+#include <SPI.h>
+#include <EtherCard.h>
+static byte mymac[] = {0xDD,0xDD,0xDD,0x00,0x01,0x05};
+static byte myip[] = {192,168,1,177};
+static byte mask[] = { 255,255,255,0 };
+static byte gwip[] = { 192,168,1,1 };
+static byte dnsip[] = { 200,48,225,136 };
+byte Ethernet::buffer[1000];
+char* esllave1="OFF";
+char* esllave2="OFF";
+char* esllave3="OFF";
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
-#include <SoftwareSerial.h>
-SoftwareSerial SerialESP8266(2, 3); // RX, TX
-String server = "192.168.43.28";
+String server = "192.168.1.35";
 //String server = "pagina.com";
 //variables para enviar al servidor
 String cadena = "";
-const int llave1 = A0;
-const int llave2 = A1;
-const int llave3 = A2;
-const int bomba = A3;
+const int llave1 = 38;
+const int llave2 = 39;
+const int llave3 = 40;
+const int bomba = 41;
 #include "DHT.h"
-#define DHTPIN 4
+#define DHTPIN 30
 #define DHTTYPE DHT11
 #include <Keypad.h>
 DHT dht(DHTPIN, DHTTYPE);
@@ -45,8 +54,8 @@ char keys[rowsCount][columsCount] = {
   { 'A', 'B', 'C', 'D' }
 };
 char dato = 'A';
-const byte rowPins[rowsCount] = { 9, 10, 11, 12 };
-const byte columnPins[columsCount] = { 5, 6, 7, 8 };
+const byte rowPins[rowsCount] = { 46, 47, 48, 49 };
+const byte columnPins[columsCount] = { 42, 43,44, 45 };
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, rowsCount, columsCount);
 int h1 = 0, h2 = 0, m1 = 0, m2 = 0;
@@ -57,11 +66,13 @@ void setup() {
   lcd.init();
   lcd.backlight();
   Serial.begin(9600);
-  //actualizarbd(0,6);
-  // actualizarbd(1,0);
-  // actualizarbd(2,18);
-  //actualizarbd(3,0);
-  // actualizarbd(4,30);
+   RTC.begin();
+  //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
+  actualizarbd(0,6);
+  actualizarbd(1,0);
+  actualizarbd(2,18);
+  actualizarbd(3,0);
+  actualizarbd(4,30);
   h1 = leerbd(0);
   m1 = leerbd(1);
   h2 = leerbd(2);
@@ -71,18 +82,133 @@ void setup() {
   pinMode(llave1, OUTPUT);
   pinMode(llave2, OUTPUT);
   pinMode(llave3, OUTPUT);
-  digitalWrite(llave1, LOW);
-  digitalWrite(llave2, LOW);
-  digitalWrite(llave3, LOW);
+  digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
   digitalWrite(bomba, HIGH);
-  SerialESP8266.begin(9600);
- // iniciar();
+  Serial2.begin(9600);
+  Serial.println("Test del Modulo  ENC28J60");
+ 
+  if (!ether.begin(sizeof Ethernet::buffer, mymac, 53))
+    Serial.println( "No se ha podido acceder a la controlador Ethernet");
+ else
+   Serial.println("Controlador Ethernet inicializado");
+
+  if (!ether.staticSetup(myip, gwip, dnsip, mask))
+    Serial.println("No se pudo establecer la dirección IP");
+
+  Serial.println();
+ 
+    ether.printIp("IP:  ", ether.myip);
+  ether.printIp("GW:  ", ether.gwip);
+  ether.printIp("DNS: ", ether.dnsip);
+//iniciar();
 }
 
+static word homePage() {
+ BufferFiller bfill = ether.tcpOffset();
+ bfill.emit_p(PSTR("<!DOCTYPE html>"
+      "<html><head><title>HIDROPONIA UNU</title></head>"
+      "<body>"
+      "<div style='text-align:center;'>"
+      "<h1>SISTEMA DE RIEGO HIDROPONIA UNU</h1>"      
+      "<br /><br />Estado esllave1: $S<br />"      
+      "<a href=\"/?esllave1=ON\"><input type=\"button\" value=\"ON\"></a>"
+      "<a href=\"/?esllave1=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+       "<br /><br />Estado esllave2: $S<br />"      
+      "<a href=\"/?esllave2=ON\"><input type=\"button\" value=\"ON\"></a>"
+      "<a href=\"/?esllave2=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+       "<br /><br />Estado esllave3: $S<br />"      
+      "<a href=\"/?esllave3=ON\"><input type=\"button\" value=\"ON\"></a>"
+      "<a href=\"/?esllave3=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+      "<br /><br />"
+      "<a href='http://192.168.1.35/hidro/' target='_blank'>Sistema hidroponia</a>"
+      "</body></html>"      
+      ),esllave1,esllave2,esllave3);
+     
+  return bfill.position();
+}
 void loop() {
-  menu();
-
+ menu();
+  pagina();
 }
+void pagina(){
+  word len = ether.packetReceive();
+  word pos = ether.packetLoop(len);
+  
+  if(pos) {
+    
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=ON") != 0) {
+      Serial.println("Comando ON recivido");
+     digitalWrite(llave1, LOW);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, LOW);
+      esllave1 = "ON";
+      esllave2 = "OFF";
+      esllave3 = "OFF";
+      envio(1, 0, 0);
+    }
+
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=OFF") != 0) {
+      Serial.println("Comando OFF recivido");
+      digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, HIGH);
+        esllave1 = "OFF";
+      esllave2 = "OFF";
+      esllave3 = "OFF";
+      
+    }    
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=ON") != 0) {
+      Serial.println("Comando ON recivido");
+      digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, LOW);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, LOW);
+      esllave1 = "OFF";
+      esllave2 = "ON";
+      esllave3 = "OFF";
+      envio(0, 1, 0);
+    }
+
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=OFF") != 0) {
+      Serial.println("Comando OFF recivido");
+     digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, HIGH);
+        esllave1 = "OFF";
+      esllave2 = "OFF";
+      esllave3 = "OFF";
+    
+    }
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=ON") != 0) {
+      Serial.println("Comando ON recivido");
+      digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, LOW);
+  digitalWrite(bomba, LOW);
+      esllave1 = "OFF";
+      esllave2 = "OFF";
+      esllave3 = "ON";
+      envio(0, 0, 1);
+    }
+
+    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=OFF") != 0) {
+      Serial.println("Comando OFF recivido");
+      digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, HIGH);
+        esllave1 = "OFF";
+      esllave2 = "OFF";
+      esllave3 = "OFF";
+      
+    }    
+    ether.httpServerReply(homePage()); // se envia página Web
+  }}
 void eleccion(char dato) {
   if (dato == 'A' || dato == 'B' || dato == 'C' || dato == 'D'  ) {
      temp = "0";
@@ -125,62 +251,27 @@ void modo1() {
   valores();
   if (c1 != 0) {
     c1 = c1 + 1;
-    if (c1 > 200) {
-      digitalWrite(llave1, LOW);
-      digitalWrite(llave2, LOW);
-      digitalWrite(llave3, LOW);
+    if (c1 > 100) {
+      digitalWrite(llave1, HIGH);
+      digitalWrite(llave2, HIGH);
+      digitalWrite(llave3, HIGH);
       digitalWrite(bomba, HIGH);
 
-      envio(0, 0, 0);
+     envio(0, 0, 0);
       c1 = 0;
     }
   }
 
   if (dato == '1') {
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, HIGH);
     digitalWrite(bomba, HIGH);
 
     envio(1, 0, 0);
     delay(1000);
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);
-    digitalWrite(bomba, LOW);
-    c1 = 1;
-    horau = hora;
-    minuu = minu;
-    seguu = segu;
-    dato = "";
-  }
-  if (dato == '2') {
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);
-    digitalWrite(bomba, HIGH);
-
-    envio(0, 1, 0);
-    delay(1000); 
     digitalWrite(llave1, LOW);
     digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, LOW);
-    digitalWrite(bomba, LOW);
-    c1 = 1;
-    horau = hora;
-    minuu = minu;
-    seguu = segu;
-    dato = "";
-  }
-  if (dato == '3') {
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);
-    digitalWrite(bomba, HIGH);
-    envio(0, 0, 1);
-    delay(1000);
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, LOW);
     digitalWrite(llave3, HIGH);
     digitalWrite(bomba, LOW);
     c1 = 1;
@@ -190,12 +281,45 @@ void modo1() {
     dato = "";
   }
   if (dato == '2') {
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, LOW);
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, HIGH);
     digitalWrite(bomba, HIGH);
 
-    envio(0, 0, 0);
+   envio(0, 1, 0);
+    delay(1000); 
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, LOW);
+    digitalWrite(llave3, HIGH);
+    digitalWrite(bomba, LOW);
+    c1 = 1;
+    horau = hora;
+    minuu = minu;
+    seguu = segu;
+    dato = "";
+  }
+  if (dato == '3') {
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, HIGH);
+    digitalWrite(bomba, HIGH);
+   envio(0, 0, 1);
+    delay(1000);
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, LOW);
+    digitalWrite(bomba, LOW);
+    c1 = 1;
+    horau = hora;
+    minuu = minu;
+    seguu = segu;
+    dato = "";
+  }
+  if (dato == '4') {
+    digitalWrite(llave1, HIGH);
+    digitalWrite(llave2, HIGH);
+    digitalWrite(llave3, HIGH);
+    digitalWrite(bomba, HIGH);
     c1 = 0;
   }
   if (modo != 'A') {
@@ -360,41 +484,13 @@ if (modo == 'D') {
 
   return;
 }
-/*void modo5() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("H.INICIO:");
-  lcd.print(h1);
-  lcd.print(":");
-  lcd.print(m1);
-  lcd.print(":");
-  lcd.print("0");
-  lcd.setCursor(0, 1);
-  lcd.print("H.FINAL:");
-  lcd.print(h2);
-  lcd.print(":");
-  lcd.print(m2);
-  lcd.print(":");
-  lcd.print("0");
-  lcd.setCursor(0, 2);
-  lcd.print("Entre tiempo:");
-  lcd.print(tiempo);
-  lcd.print("Min");
-  lcd.setCursor(0, 3);
-  lcd.print("Prox riego en:");
-  lcd.print(tiempo - contador);
-  lcd.print("Min");
-  delay(2000);
-  modo = 1;
 
-  return;
-  }*/
 void iniciar() {
-  SerialESP8266.setTimeout(2000);
+  Serial2.setTimeout(2000);
 
   //Verificamos si el ESP8266 responde
-  SerialESP8266.println("AT");
-  if (SerialESP8266.find("OK"))
+  Serial2.println("AT");
+  if (Serial2.find("OK"))
     Serial.println("Respuesta AT correcto");
   else
     Serial.println("Error en ESP8266");
@@ -402,22 +498,22 @@ void iniciar() {
   //-----Configuración de red-------//Podemos comentar si el ESP ya está configurado
 
   //ESP8266 en modo estación (nos conectaremos a una red existente)
-  SerialESP8266.println("AT+CWMODE=1");
-  if (SerialESP8266.find("OK"))
+  Serial2.println("AT+CWMODE=1");
+  if (Serial2.find("OK"))
     Serial.println("ESP8266 en modo Estacion");
 
   //Nos conectamos a una red wifi
-  SerialESP8266.println("AT+CWJAP=\" \",\"12345678\"");
+  Serial2.println("AT+CWJAP=\"Fdavila\",\"acm1ptbt\"");
   Serial.println("Conectandose a la red ...");
-  SerialESP8266.setTimeout(10000); //Aumentar si demora la conexion
-  if (SerialESP8266.find("OK"))
+  Serial2.setTimeout(10000); //Aumentar si demora la conexion
+  if (Serial2.find("OK"))
     Serial.println("WIFI conectado");
   else
     Serial.println("Error al conectarse en la red");
-  SerialESP8266.setTimeout(2000);
+  Serial2.setTimeout(2000);
   //Desabilitamos las conexiones multiples
-  SerialESP8266.println("AT+CIPMUX=0");
-  if (SerialESP8266.find("OK"))
+  Serial2.println("AT+CIPMUX=0");
+  if (Serial2.find("OK"))
     Serial.println("Multiconexiones deshabilitadas");
 
 
@@ -479,15 +575,15 @@ void valores() {
     if (estado == 'a') {
 
       if (evalua == 0 && segu == 0) {
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, HIGH);
         envio(1, 0, 0);
         delay(1000);
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, LOW);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, LOW);
         c1 = -50;
         estado = 'b';
@@ -497,16 +593,16 @@ void valores() {
       if (evalua == 0 && segu == 10) {
 
         delay(1000);
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, HIGH);
 
         envio(0, 1, 0);
         delay(1000);
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, LOW);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, LOW);
         c1 = -50;
         estado = 'c';
@@ -515,16 +611,16 @@ void valores() {
     if (estado == 'c') {
       if (evalua == 0 && segu == 21) {
         delay(1000);
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, HIGH);
 
         envio(0, 0, 1);
         delay(1000);
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, HIGH);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, LOW);
         digitalWrite(bomba, LOW);
         c1 = -50;
         estado = 'd';
@@ -532,11 +628,11 @@ void valores() {
     }
     if (estado == 'd') {
       if (evalua == -0 && segu == 32) {
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, LOW);
+        digitalWrite(llave1, HIGH);
+        digitalWrite(llave2, HIGH);
+        digitalWrite(llave3, HIGH);
         digitalWrite(bomba, HIGH);
-        envio(0, 0, 0);
+       envio(0, 0, 0);
         delay(1000);
         horau = hora;
         minuu = minu;
@@ -553,8 +649,8 @@ void valores() {
 void envio(int v1, int v2, int v3) {
   //Nos conectamos con el servidor:
 
-  SerialESP8266.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");
-  if ( SerialESP8266.find("OK"))
+  Serial2.println("AT+CIPSTART=\"TCP\",\"" + server + "\",80");
+  if ( Serial2.find("OK"))
   {
     cadena = "";
     Serial.println();
@@ -572,15 +668,15 @@ void envio(int v1, int v2, int v3) {
     peticionHTTP = peticionHTTP + "Connetion: close\r\n\r\n";
 
     //Enviamos el tamaño en caracteres de la peticion http:
-    SerialESP8266.print("AT+CIPSEND=");
-    SerialESP8266.println(peticionHTTP.length());
+    Serial2.print("AT+CIPSEND=");
+    Serial2.println(peticionHTTP.length());
 
     //esperamos a ">" para enviar la petcion  http
-    if (SerialESP8266.find(">")) // ">" indica que podemos enviar la peticion http
+    if (Serial2.find(">")) // ">" indica que podemos enviar la peticion http
     { 
       Serial.println("Enviando HTTP . . .");
-      SerialESP8266.println(peticionHTTP);
-      if ( SerialESP8266.find("SEND OK"))
+      Serial2.println(peticionHTTP);
+      if ( Serial2.find("SEND OK"))
       {
         Serial.println("Peticion HTTP enviada:");
         Serial.println();
@@ -593,9 +689,9 @@ void envio(int v1, int v2, int v3) {
 
         while (fin_respuesta == false)
         { 
-          while (SerialESP8266.available() > 0)
+          while (Serial2.available() > 0)
           {
-           c = SerialESP8266.read();
+           c = Serial2.read();
            if(c=='#'){temp2=c;
            
            }
@@ -610,16 +706,16 @@ void envio(int v1, int v2, int v3) {
           {
             Serial.println("La respuesta a excedido el tamaño maximo");
 
-            SerialESP8266.println("AT+CIPCLOSE");
-            if ( SerialESP8266.find("OK"))
+            Serial2.println("AT+CIPCLOSE");
+            if ( Serial2.find("OK"))
               Serial.println("Conexion finalizada");
             fin_respuesta = true;
           }
           if ((millis() - tiempo_inicio) > 1000) //Finalizamos si ya han transcurrido 10 seg
           { Serial.println();
             Serial.println("Tiempo de espera agotado");
-            SerialESP8266.println("AT+CIPCLOSE");
-            if ( SerialESP8266.find("OK"))
+            Serial2.println("AT+CIPCLOSE");
+            if ( Serial2.find("OK"))
               Serial.println("Conexion finalizada");
             fin_respuesta = true;
           }
