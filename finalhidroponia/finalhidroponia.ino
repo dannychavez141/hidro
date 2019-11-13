@@ -3,15 +3,15 @@
 #include "RTClib.h"
 #include <SPI.h>
 #include <EtherCard.h>
-static byte mymac[] = {0xDD,0xDD,0xDD,0x00,0x01,0x05};
-static byte myip[] = {192,168,1,177};
-static byte mask[] = { 255,255,255,0 };
-static byte gwip[] = { 192,168,1,1 };
-static byte dnsip[] = { 200,48,225,136 };
+static byte mymac[] = {0xDD, 0xDD, 0xDD, 0x00, 0x01, 0x05};
+static byte myip[] = {192, 168, 1, 177};
+static byte mask[] = { 255, 255, 255, 0 };
+static byte gwip[] = { 192, 168, 1, 1 };
+static byte dnsip[] = { 200, 48, 225, 136 };
 byte Ethernet::buffer[1000];
-char* esllave1="OFF";
-char* esllave2="OFF";
-char* esllave3="OFF";
+char* esllave1 = "OFF";
+char* esllave2 = "OFF";
+char* esllave3 = "OFF";
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 String server = "192.168.1.35";
@@ -22,6 +22,10 @@ const int llave1 = 38;
 const int llave2 = 39;
 const int llave3 = 40;
 const int bomba = 41;
+const int led1 = 3;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 6;
 #include "DHT.h"
 #define DHTPIN 30
 #define DHTTYPE DHT11
@@ -32,8 +36,8 @@ float contador = 0;
 int tiempo = 0;
 int hum1 = 0;
 int tem1 = 0;
-char temp2="";
-        char c ="";
+char temp2 = "";
+char c = "";
 int horau = 0;
 int minuu = 0;
 int seguu = 0;
@@ -55,7 +59,7 @@ char keys[rowsCount][columsCount] = {
 };
 char dato = 'A';
 const byte rowPins[rowsCount] = { 46, 47, 48, 49 };
-const byte columnPins[columsCount] = { 42, 43,44, 45 };
+const byte columnPins[columsCount] = { 42, 43, 44, 45 };
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, columnPins, rowsCount, columsCount);
 int h1 = 0, h2 = 0, m1 = 0, m2 = 0;
@@ -66,13 +70,13 @@ void setup() {
   lcd.init();
   lcd.backlight();
   Serial.begin(9600);
-   RTC.begin();
+  RTC.begin();
   //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
-  actualizarbd(0,6);
-  actualizarbd(1,0);
-  actualizarbd(2,18);
-  actualizarbd(3,0);
-  actualizarbd(4,30);
+  actualizarbd(0, 6);
+  actualizarbd(1, 0);
+  actualizarbd(2, 18);
+  actualizarbd(3, 0);
+  actualizarbd(4, 30);
   h1 = leerbd(0);
   m1 = leerbd(1);
   h2 = leerbd(2);
@@ -82,138 +86,129 @@ void setup() {
   pinMode(llave1, OUTPUT);
   pinMode(llave2, OUTPUT);
   pinMode(llave3, OUTPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
   digitalWrite(llave1, HIGH);
   digitalWrite(llave2, HIGH);
   digitalWrite(llave3, HIGH);
   digitalWrite(bomba, HIGH);
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
   Serial2.begin(9600);
   Serial.println("Test del Modulo  ENC28J60");
- 
+
   if (!ether.begin(sizeof Ethernet::buffer, mymac, 53))
     Serial.println( "No se ha podido acceder a la controlador Ethernet");
- else
-   Serial.println("Controlador Ethernet inicializado");
+  else
+    Serial.println("Controlador Ethernet inicializado");
 
   if (!ether.staticSetup(myip, gwip, dnsip, mask))
     Serial.println("No se pudo establecer la dirección IP");
 
   Serial.println();
- 
-    ether.printIp("IP:  ", ether.myip);
+
+  ether.printIp("IP:  ", ether.myip);
   ether.printIp("GW:  ", ether.gwip);
   ether.printIp("DNS: ", ether.dnsip);
-//iniciar();
+  //iniciar();
 }
 
 static word homePage() {
- BufferFiller bfill = ether.tcpOffset();
- bfill.emit_p(PSTR("<!DOCTYPE html>"
-      "<html><head><title>HIDROPONIA UNU</title></head>"
-      "<body>"
-      "<div style='text-align:center;'>"
-      "<h1>SISTEMA DE RIEGO HIDROPONIA UNU</h1>"      
-      "<br /><br />Estado esllave1: $S<br />"      
-      "<a href=\"/?esllave1=ON\"><input type=\"button\" value=\"ON\"></a>"
-      "<a href=\"/?esllave1=OFF\"><input type=\"button\" value=\"OFF\"></a>"
-       "<br /><br />Estado esllave2: $S<br />"      
-      "<a href=\"/?esllave2=ON\"><input type=\"button\" value=\"ON\"></a>"
-      "<a href=\"/?esllave2=OFF\"><input type=\"button\" value=\"OFF\"></a>"
-       "<br /><br />Estado esllave3: $S<br />"      
-      "<a href=\"/?esllave3=ON\"><input type=\"button\" value=\"ON\"></a>"
-      "<a href=\"/?esllave3=OFF\"><input type=\"button\" value=\"OFF\"></a>"
-      "<br /><br />"
-      "<a href='http://192.168.1.35/hidro/' target='_blank'>Sistema hidroponia</a>"
-      "</body></html>"      
-      ),esllave1,esllave2,esllave3);
-     
+  BufferFiller bfill = ether.tcpOffset();
+  bfill.emit_p(PSTR("<!DOCTYPE html>"
+                    "<html><head><title>HIDROPONIA UNU</title></head>"
+                    "<body>"
+                    "<div style='text-align:center;'>"
+                    "<h1>SISTEMA DE RIEGO HIDROPONIA UNU</h1>"
+                    "<br /><br />Estado esllave1: $S<br />"
+                    "<a href=\"/?esllave1=ON\"><input type=\"button\" value=\"ON\"></a>"
+                    "<a href=\"/?esllave1=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+                    "<br /><br />Estado esllave2: $S<br />"
+                    "<a href=\"/?esllave2=ON\"><input type=\"button\" value=\"ON\"></a>"
+                    "<a href=\"/?esllave2=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+                    "<br /><br />Estado esllave3: $S<br />"
+                    "<a href=\"/?esllave3=ON\"><input type=\"button\" value=\"ON\"></a>"
+                    "<a href=\"/?esllave3=OFF\"><input type=\"button\" value=\"OFF\"></a>"
+                    "<br /><br />"
+                    "<a href='http://192.168.1.35/hidro/' target='_blank'>Sistema hidroponia</a>"
+                    "</body></html>"
+                   ), esllave1, esllave2, esllave3);
+
   return bfill.position();
 }
 void loop() {
- menu();
+  menu();
   pagina();
 }
-void pagina(){
+void pagina() {
   word len = ether.packetReceive();
   word pos = ether.packetLoop(len);
-  
-  if(pos) {
-    
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=ON") != 0) {
+
+  if (pos) {
+
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=ON") != 0) {
       Serial.println("Comando ON recivido");
-     digitalWrite(llave1, LOW);
-  digitalWrite(llave2, HIGH);
-  digitalWrite(llave3, HIGH);
-  digitalWrite(bomba, LOW);
+      abrirllave1();
       esllave1 = "ON";
       esllave2 = "OFF";
       esllave3 = "OFF";
-      envio(1, 0, 0);
+
     }
 
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=OFF") != 0) {
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=OFF") != 0) {
       Serial.println("Comando OFF recivido");
-      digitalWrite(llave1, HIGH);
-  digitalWrite(llave2, HIGH);
-  digitalWrite(llave3, HIGH);
-  digitalWrite(bomba, HIGH);
-        esllave1 = "OFF";
+      cerrarllaves();
+      esllave1 = "OFF";
       esllave2 = "OFF";
       esllave3 = "OFF";
-      
-    }    
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=ON") != 0) {
+
+    }
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=ON") != 0) {
       Serial.println("Comando ON recivido");
-      digitalWrite(llave1, HIGH);
-  digitalWrite(llave2, LOW);
-  digitalWrite(llave3, HIGH);
-  digitalWrite(bomba, LOW);
+      abrirllave2();
       esllave1 = "OFF";
       esllave2 = "ON";
       esllave3 = "OFF";
-      envio(0, 1, 0);
+
     }
 
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=OFF") != 0) {
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=OFF") != 0) {
       Serial.println("Comando OFF recivido");
-     digitalWrite(llave1, HIGH);
-  digitalWrite(llave2, HIGH);
-  digitalWrite(llave3, HIGH);
-  digitalWrite(bomba, HIGH);
-        esllave1 = "OFF";
+      cerrarllaves();
+      esllave1 = "OFF";
       esllave2 = "OFF";
       esllave3 = "OFF";
-    
+
     }
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=ON") != 0) {
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=ON") != 0) {
       Serial.println("Comando ON recivido");
-      digitalWrite(llave1, HIGH);
-  digitalWrite(llave2, HIGH);
-  digitalWrite(llave3, LOW);
-  digitalWrite(bomba, LOW);
+      abrirllave3();
       esllave1 = "OFF";
       esllave2 = "OFF";
       esllave3 = "ON";
-      envio(0, 0, 1);
+
     }
 
-    if(strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=OFF") != 0) {
+    if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=OFF") != 0) {
       Serial.println("Comando OFF recivido");
-      digitalWrite(llave1, HIGH);
-  digitalWrite(llave2, HIGH);
-  digitalWrite(llave3, HIGH);
-  digitalWrite(bomba, HIGH);
-        esllave1 = "OFF";
+      cerrarllaves();
+      esllave1 = "OFF";
       esllave2 = "OFF";
       esllave3 = "OFF";
-      
-    }    
+
+    }
     ether.httpServerReply(homePage()); // se envia página Web
-  }}
+  }
+}
 void eleccion(char dato) {
   if (dato == 'A' || dato == 'B' || dato == 'C' || dato == 'D'  ) {
-     temp = "0";
-     modo = dato;
-   
+    temp = "0";
+    modo = dato;
+
   } else if ( dato == '#')
   { cambio = 1;
     temp = "0";
@@ -252,28 +247,15 @@ void modo1() {
   if (c1 != 0) {
     c1 = c1 + 1;
     if (c1 > 100) {
-      digitalWrite(llave1, HIGH);
-      digitalWrite(llave2, HIGH);
-      digitalWrite(llave3, HIGH);
-      digitalWrite(bomba, HIGH);
-
-     envio(0, 0, 0);
+      cerrarllaves();
       c1 = 0;
     }
   }
 
   if (dato == '1') {
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, HIGH);
-
-    envio(1, 0, 0);
+    cerrarllaves();
     delay(1000);
-    digitalWrite(llave1, LOW);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, LOW);
+    abrirllave1();
     c1 = 1;
     horau = hora;
     minuu = minu;
@@ -281,17 +263,9 @@ void modo1() {
     dato = "";
   }
   if (dato == '2') {
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, HIGH);
-
-   envio(0, 1, 0);
-    delay(1000); 
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, LOW);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, LOW);
+    cerrarllaves();
+    delay(1000);
+    abrirllave2();
     c1 = 1;
     horau = hora;
     minuu = minu;
@@ -299,16 +273,10 @@ void modo1() {
     dato = "";
   }
   if (dato == '3') {
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, HIGH);
-   envio(0, 0, 1);
+    cerrarllaves();
+
     delay(1000);
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, LOW);
-    digitalWrite(bomba, LOW);
+    abrirllave3();
     c1 = 1;
     horau = hora;
     minuu = minu;
@@ -316,10 +284,7 @@ void modo1() {
     dato = "";
   }
   if (dato == '4') {
-    digitalWrite(llave1, HIGH);
-    digitalWrite(llave2, HIGH);
-    digitalWrite(llave3, HIGH);
-    digitalWrite(bomba, HIGH);
+    cerrarllaves();
     c1 = 0;
   }
   if (modo != 'A') {
@@ -357,34 +322,35 @@ void modo2() {
   lcd.print(m1);
   lcd.print("/");
   if (modo == 'B') {
-  if (cambio == 1)
-  { lcd.print("C.Hora");
-    if (temp == "0") {
-      temp = h1;
-    }
-    Serial.println(temp);
-    h1 = temp.toInt();
-    if (h1 > 23) {
-      h1 = 0;
-      Serial.println("entre aca");
-      temp = '0';
-    }
+    if (cambio == 1)
+    { lcd.print("C.Hora");
+      if (temp == "0") {
+        temp = h1;
+      }
+      Serial.println(temp);
+      h1 = temp.toInt();
+      if (h1 > 23) {
+        h1 = 0;
+        Serial.println("entre aca");
+        temp = '0';
+      }
 
 
-  } else {
-    lcd.print("C.Minu");
-    if (temp == "0") {
-      temp = m1;
-    }
-    Serial.println(temp);
-    m1 = temp.toInt();
-    if (m1 > 59) {
-      m1 = 0;
-      Serial.println("entre aca");
-      temp = "0";
-    }
+    } else {
+      lcd.print("C.Minu");
+      if (temp == "0") {
+        temp = m1;
+      }
+      Serial.println(temp);
+      m1 = temp.toInt();
+      if (m1 > 59) {
+        m1 = 0;
+        Serial.println("entre aca");
+        temp = "0";
+      }
 
-  }}
+    }
+  }
   delay(200);
   return;
 
@@ -415,33 +381,34 @@ void modo3() {
   lcd.print(":");
   lcd.print(m2);
   lcd.print(" / ");
-    if (modo == 'C') {
-  if (cambio == 1)
-  { lcd.print("C.Hora");
+  if (modo == 'C') {
+    if (cambio == 1)
+    { lcd.print("C.Hora");
 
-    if (temp == "0") {
-      temp = h2;
+      if (temp == "0") {
+        temp = h2;
+      }
+      Serial.println(temp);
+      h2 = temp.toInt();
+      if (h2 > 23) {
+        h2 = 0;
+        Serial.println("entre aca");
+        temp = "0";
+      }
+    } else {
+      lcd.print("C.Minu");
+      if (temp == "0") {
+        temp = m2;
+      }
+      Serial.println(temp);
+      m2 = temp.toInt();
+      if (m2 > 59) {
+        m2 = 0;
+        Serial.println("entre aca");
+        temp = "0";
+      }
     }
-    Serial.println(temp);
-    h2 = temp.toInt();
-    if (h2 > 23) {
-      h2 = 0;
-      Serial.println("entre aca");
-      temp = "0";
-    }
-  } else {
-    lcd.print("C.Minu");
-    if (temp == "0") {
-      temp = m2;
-    }
-    Serial.println(temp);
-    m2 = temp.toInt();
-    if (m2 > 59) {
-      m2 = 0;
-      Serial.println("entre aca");
-      temp = "0";
-    }
-  }}
+  }
 
   delay(200);
   return;
@@ -450,8 +417,8 @@ void modo4() {
   teclado();
   if (modo != 'D') {
     temp = "0";
-     Serial.print("entre aca:");
-     Serial.println(temp);
+    Serial.print("entre aca:");
+    Serial.println(temp);
     actualizarbd(4, tiempo);
     h1 = leerbd(0);
     m1 = leerbd(1);
@@ -468,17 +435,18 @@ void modo4() {
   lcd.print(tiempo);
 
   lcd.print(" Minu");
-if (modo == 'D') {
-  if (temp == "0") {
-    temp = tiempo;
+  if (modo == 'D') {
+    if (temp == "0") {
+      temp = tiempo;
+    }
+    Serial.println(temp);
+    tiempo = temp.toInt();
+    if (tiempo > 180) {
+      tiempo = 0;
+      Serial.println("entre aca");
+      temp = "0";
+    }
   }
-  Serial.println(temp);
-  tiempo = temp.toInt();
-  if (tiempo > 180) {
-    tiempo = 0;
-    Serial.println("entre aca");
-    temp = "0";
-  }}
   delay(200);
 
 
@@ -559,11 +527,6 @@ void valores() {
   hora = (now.hour());
   minu = (now.minute());
   segu = (now.second());
-  /*Serial.print(hora);
-    Serial.print(':');
-    Serial.print(minu);
-    Serial.print(':');
-    Serial.println(segu);*/
   if (segu == 0) {
     contador = contador + 0.25;
   }
@@ -575,35 +538,21 @@ void valores() {
     if (estado == 'a') {
 
       if (evalua == 0 && segu == 0) {
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, HIGH);
-        envio(1, 0, 0);
+        cerrarllaves();
         delay(1000);
-        digitalWrite(llave1, LOW);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, LOW);
+        abrirllave1();
         c1 = -50;
         estado = 'b';
       }
     }
     if (estado == 'b') {
       if (evalua == 0 && segu == 10) {
-
+        cerrarllaves();
         delay(1000);
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, HIGH);
 
-        envio(0, 1, 0);
+        abrirllave2();
         delay(1000);
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, LOW);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, LOW);
+
         c1 = -50;
         estado = 'c';
       }
@@ -611,32 +560,22 @@ void valores() {
     if (estado == 'c') {
       if (evalua == 0 && segu == 21) {
         delay(1000);
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, HIGH);
+        cerrarllaves();
 
-        envio(0, 0, 1);
+
         delay(1000);
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, LOW);
-        digitalWrite(bomba, LOW);
+        abrirllave3();
         c1 = -50;
         estado = 'd';
       }
     }
     if (estado == 'd') {
       if (evalua == -0 && segu == 32) {
-        digitalWrite(llave1, HIGH);
-        digitalWrite(llave2, HIGH);
-        digitalWrite(llave3, HIGH);
-        digitalWrite(bomba, HIGH);
-       envio(0, 0, 0);
         delay(1000);
         horau = hora;
         minuu = minu;
         seguu = segu;
+        cerrarllaves();
         c1 = 0;
         estado = 'a';
         contador = 0;
@@ -646,6 +585,52 @@ void valores() {
   }
 
 }
+void abrirllave1() {
+  envio(1, 0, 0);
+  digitalWrite(llave1, LOW);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, LOW);
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, HIGH);
+  
+};
+void abrirllave2() {
+  envio(0, 1, 0);
+  digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, LOW);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, LOW);
+   digitalWrite(led1, LOW);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, HIGH);
+ 
+};
+void abrirllave3() {
+   envio(0, 0, 1);
+   digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, LOW);
+  digitalWrite(bomba, LOW);
+   digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, HIGH);
+ 
+};
+void cerrarllaves() {
+  digitalWrite(llave1, HIGH);
+  digitalWrite(llave2, HIGH);
+  digitalWrite(llave3, HIGH);
+  digitalWrite(bomba, HIGH);
+   digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+};
 void envio(int v1, int v2, int v3) {
   //Nos conectamos con el servidor:
 
@@ -673,7 +658,7 @@ void envio(int v1, int v2, int v3) {
 
     //esperamos a ">" para enviar la petcion  http
     if (Serial2.find(">")) // ">" indica que podemos enviar la peticion http
-    { 
+    {
       Serial.println("Enviando HTTP . . .");
       Serial2.println(peticionHTTP);
       if ( Serial2.find("SEND OK"))
@@ -688,17 +673,18 @@ void envio(int v1, int v2, int v3) {
         cadena = "";
 
         while (fin_respuesta == false)
-        { 
+        {
           while (Serial2.available() > 0)
           {
-           c = Serial2.read();
-           if(c=='#'){temp2=c;
-           
-           }
-           if(temp2=='#'){
-           Serial.write(c);
-           cadena.concat(c);  //guardamos la respuesta en el string "cadena"
-           }
+            c = Serial2.read();
+            if (c == '#') {
+              temp2 = c;
+
+            }
+            if (temp2 == '#') {
+              Serial.write(c);
+              cadena.concat(c);  //guardamos la respuesta en el string "cadena"
+            }
 
           }
           //finalizamos si la respuesta es mayor a 500 caracteres
