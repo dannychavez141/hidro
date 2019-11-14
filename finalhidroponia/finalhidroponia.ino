@@ -12,6 +12,7 @@ byte Ethernet::buffer[1000];
 char* esllave1 = "OFF";
 char* esllave2 = "OFF";
 char* esllave3 = "OFF";
+int rep=0;
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 String server = "192.168.1.35";
@@ -72,11 +73,11 @@ void setup() {
   Serial.begin(9600);
   RTC.begin();
   //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
-  actualizarbd(0, 6);
-  actualizarbd(1, 0);
-  actualizarbd(2, 18);
-  actualizarbd(3, 0);
-  actualizarbd(4, 30);
+ // actualizarbd(0, 6);
+  //actualizarbd(1, 0);
+  //actualizarbd(2, 18);
+  //actualizarbd(3, 0);
+  //actualizarbd(4, 30);
   h1 = leerbd(0);
   m1 = leerbd(1);
   h2 = leerbd(2);
@@ -153,53 +154,38 @@ void pagina() {
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=ON") != 0) {
       Serial.println("Comando ON recivido");
       abrirllave1();
-      esllave1 = "ON";
-      esllave2 = "OFF";
-      esllave3 = "OFF";
-
+     
     }
 
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave1=OFF") != 0) {
       Serial.println("Comando OFF recivido");
       cerrarllaves();
-      esllave1 = "OFF";
-      esllave2 = "OFF";
-      esllave3 = "OFF";
+
 
     }
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=ON") != 0) {
       Serial.println("Comando ON recivido");
       abrirllave2();
-      esllave1 = "OFF";
-      esllave2 = "ON";
-      esllave3 = "OFF";
+     
 
     }
 
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave2=OFF") != 0) {
       Serial.println("Comando OFF recivido");
       cerrarllaves();
-      esllave1 = "OFF";
-      esllave2 = "OFF";
-      esllave3 = "OFF";
+
 
     }
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=ON") != 0) {
       Serial.println("Comando ON recivido");
       abrirllave3();
-      esllave1 = "OFF";
-      esllave2 = "OFF";
-      esllave3 = "ON";
+     
 
     }
 
     if (strstr((char *)Ethernet::buffer + pos, "GET /?esllave3=OFF") != 0) {
       Serial.println("Comando OFF recivido");
       cerrarllaves();
-      esllave1 = "OFF";
-      esllave2 = "OFF";
-      esllave3 = "OFF";
-
     }
     ether.httpServerReply(homePage()); // se envia página Web
   }
@@ -248,7 +234,7 @@ void modo1() {
     c1 = c1 + 1;
     if (c1 > 100) {
       cerrarllaves();
-      c1 = 0;
+     
     }
   }
 
@@ -256,20 +242,15 @@ void modo1() {
     cerrarllaves();
     delay(1000);
     abrirllave1();
-    c1 = 1;
-    horau = hora;
-    minuu = minu;
-    seguu = segu;
+    
     dato = "";
   }
   if (dato == '2') {
     cerrarllaves();
     delay(1000);
     abrirllave2();
-    c1 = 1;
-    horau = hora;
-    minuu = minu;
-    seguu = segu;
+   
+    
     dato = "";
   }
   if (dato == '3') {
@@ -277,15 +258,12 @@ void modo1() {
 
     delay(1000);
     abrirllave3();
-    c1 = 1;
-    horau = hora;
-    minuu = minu;
-    seguu = segu;
+    
     dato = "";
   }
   if (dato == '4') {
     cerrarllaves();
-    c1 = 0;
+   
   }
   if (modo != 'A') {
     temp = "0";
@@ -430,8 +408,6 @@ void modo4() {
   lcd.setCursor(0, 0);
   lcd.print("ENTRE TIEMPO");
   lcd.setCursor(0, 1);
-  /* lcd.print("DE RIEGO:");
-    lcd.setCursor(0, 2);*/
   lcd.print(tiempo);
 
   lcd.print(" Minu");
@@ -528,8 +504,14 @@ void valores() {
   minu = (now.minute());
   segu = (now.second());
   if (segu == 0) {
-    contador = contador + 0.25;
+    if(rep==0){
+    contador = contador + 1;
+    rep=1;}
   }
+   if (segu != 0) {
+    rep=0;
+  }
+  
   if (hora > h1 && hora < h2) {
     int evalua = tiempo - contador;
     if (evalua < -1) {
@@ -576,7 +558,7 @@ void valores() {
         minuu = minu;
         seguu = segu;
         cerrarllaves();
-        c1 = 0;
+       
         estado = 'a';
         contador = 0;
       }
@@ -595,7 +577,13 @@ void abrirllave1() {
   digitalWrite(led2, LOW);
   digitalWrite(led3, LOW);
   digitalWrite(led4, HIGH);
-  
+  esllave1 = "ON";
+  esllave2 = "OFF";
+  esllave3 = "OFF";
+  horau = hora;
+    minuu = minu;
+    seguu = segu;
+  c1 = 1;
 };
 void abrirllave2() {
   envio(0, 1, 0);
@@ -603,33 +591,50 @@ void abrirllave2() {
   digitalWrite(llave2, LOW);
   digitalWrite(llave3, HIGH);
   digitalWrite(bomba, LOW);
-   digitalWrite(led1, LOW);
+  digitalWrite(led1, LOW);
   digitalWrite(led2, HIGH);
   digitalWrite(led3, LOW);
   digitalWrite(led4, HIGH);
- 
+  horau = hora;
+    minuu = minu;
+    seguu = segu;
+  esllave1 = "OFF";
+  esllave2 = "ON";
+  esllave3 = "OFF";
+  c1 = 1;
 };
 void abrirllave3() {
-   envio(0, 0, 1);
-   digitalWrite(llave1, HIGH);
+  envio(0, 0, 1);
+  digitalWrite(llave1, HIGH);
   digitalWrite(llave2, HIGH);
   digitalWrite(llave3, LOW);
   digitalWrite(bomba, LOW);
-   digitalWrite(led1, LOW);
+  digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
   digitalWrite(led3, HIGH);
   digitalWrite(led4, HIGH);
- 
+  esllave1 = "OFF";
+  esllave2 = "OFF";
+  esllave3 = "ON";
+  horau = hora;
+    minuu = minu;
+    seguu = segu;
+  c1 = 1;
+
 };
 void cerrarllaves() {
   digitalWrite(llave1, HIGH);
   digitalWrite(llave2, HIGH);
   digitalWrite(llave3, HIGH);
   digitalWrite(bomba, HIGH);
-   digitalWrite(led1, LOW);
+  digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
   digitalWrite(led3, LOW);
   digitalWrite(led4, LOW);
+  esllave1 = "OFF";
+  esllave2 = "OFF";
+  esllave3 = "OFF";
+  c1 = 0;
 };
 void envio(int v1, int v2, int v3) {
   //Nos conectamos con el servidor:
