@@ -72,11 +72,11 @@ void setup() {
   Serial.begin(9600);
   RTC.begin();
   //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
-  actualizarbd(0, 6);
-  actualizarbd(1, 0);
-  actualizarbd(2, 18);
-  actualizarbd(3, 0);
-  actualizarbd(4, 30);
+  //actualizarbd(0, 6);
+  //actualizarbd(1, 0);
+  //actualizarbd(2, 18);
+ // actualizarbd(3, 0);
+ // actualizarbd(4, 30);
   h1 = leerbd(0);
   m1 = leerbd(1);
   h2 = leerbd(2);
@@ -532,7 +532,7 @@ void valores() {
   }
   if (hora > h1 && hora < h2) {
     int evalua = tiempo - contador;
-    if (evalua < -1) {
+    if (evalua < 0) {
       contador = 0;
     }
     if (estado == 'a') {
@@ -541,7 +541,7 @@ void valores() {
         cerrarllaves();
         delay(1000);
         abrirllave1();
-        c1 = -50;
+        c1 = 1;
         estado = 'b';
       }
     }
@@ -553,7 +553,7 @@ void valores() {
         abrirllave2();
         delay(1000);
 
-        c1 = -50;
+        c1 = 1;
         estado = 'c';
       }
     }
@@ -565,7 +565,7 @@ void valores() {
 
         delay(1000);
         abrirllave3();
-        c1 = -50;
+        c1 = 1;
         estado = 'd';
       }
     }
