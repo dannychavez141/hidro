@@ -73,7 +73,7 @@ function mueveReloj(){
 <?php for ($i=1; $i <=$llaves; $i++) {
 echo "hora".$i.".forEach(function(hora) {
     if (hora==hor) {cont".$i."=cont+2; est".$i."='b';
-  salt".$i."= window.open('http://192.168.100.5?llave".$i."=ON', '_blank'); 
+  salt".$i."= window.open('http://192.168.1.35?llave".$i."=ON', '_blank'); 
  
 }
 });
@@ -86,7 +86,7 @@ console.log(cont".$i."+':'+cont);
  if (est".$i."=='c') {
     if(cont==cont".$i.")
   {cont".$i."=cont+2; est".$i."='d';
-   salt".$i."= window.open('http://192.168.100.5?llave".$i."=OFF', '_blank'); 
+   salt".$i."= window.open('http://192.168.1.35?llave".$i."=OFF', '_blank'); 
 }}
 if (est".$i."=='d') {
     if(cont==cont".$i.")
