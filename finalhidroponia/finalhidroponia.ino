@@ -1,21 +1,20 @@
 #include <EEPROM.h>
 #include <Wire.h>
 #include "RTClib.h"
-#include <SPI.h>
 #include <EtherCard.h>
-static byte mymac[] = {0xDD, 0xDD, 0xDD, 0x00, 0x01, 0x05};
-static byte myip[] = {192, 168, 1, 177};
+static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
+static byte myip[] = {192, 168, 1, 100};
 static byte mask[] = { 255, 255, 255, 0 };
 static byte gwip[] = { 192, 168, 1, 1 };
 static byte dnsip[] = { 200, 48, 225, 136 };
-byte Ethernet::buffer[1000];
+byte Ethernet::buffer[1500];
 char* esllave1 = "OFF";
 char* esllave2 = "OFF";
 char* esllave3 = "OFF";
 int rep=0;
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 20, 4);
-String server = "192.168.1.35";
+String server = "192.168.1.30";
 //String server = "pagina.com";
 //variables para enviar al servidor
 String cadena = "";
@@ -73,19 +72,13 @@ void setup() {
   Serial.begin(9600);
   RTC.begin();
   //RTC.adjust(DateTime(__DATE__, __TIME__)); // Establece la fecha y hora (Comentar una vez establecida la hora)
-<<<<<<< HEAD
+
   //actualizarbd(0, 6);
   //actualizarbd(1, 0);
   //actualizarbd(2, 18);
  // actualizarbd(3, 0);
  // actualizarbd(4, 30);
-=======
- // actualizarbd(0, 6);
-  //actualizarbd(1, 0);
-  //actualizarbd(2, 18);
-  //actualizarbd(3, 0);
-  //actualizarbd(4, 30);
->>>>>>> 58a7b71a4cc76cc51e5e07d470f2752743f02a81
+
   h1 = leerbd(0);
   m1 = leerbd(1);
   h2 = leerbd(2);
@@ -117,7 +110,8 @@ void setup() {
 
   if (!ether.staticSetup(myip, gwip, dnsip, mask))
     Serial.println("No se pudo establecer la dirección IP");
-
+ /* if (!ether.dhcpSetup())
+   */ Serial.println("DHCP failed");
   Serial.println();
 
   ether.printIp("IP:  ", ether.myip);
@@ -143,7 +137,7 @@ static word homePage() {
                     "<a href=\"/?esllave3=ON\"><input type=\"button\" value=\"ON\"></a>"
                     "<a href=\"/?esllave3=OFF\"><input type=\"button\" value=\"OFF\"></a>"
                     "<br /><br />"
-                    "<a href='http://192.168.1.35/hidro/' target='_blank'>Sistema hidroponia</a>"
+                    "<a href='http://192.168.1.30/hidro/' target='_blank'>Sistema hidroponia</a>"
                     "</body></html>"
                    ), esllave1, esllave2, esllave3);
 
@@ -455,7 +449,7 @@ void iniciar() {
     Serial.println("ESP8266 en modo Estacion");
 
   //Nos conectamos a una red wifi
-  Serial2.println("AT+CWJAP=\"Fdavila\",\"acm1ptbt\"");
+  Serial2.println("AT+CWJAP=\"hidrotopicos\",\"hidro2020\"");
   Serial.println("Conectandose a la red ...");
   Serial2.setTimeout(10000); //Aumentar si demora la conexion
   if (Serial2.find("OK"))
